@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axois.ts";
+import api from "../../api/axois";
 
 export default function AuthPage() {
     const [username, setUsername] = useState("");

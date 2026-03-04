@@ -77,7 +77,6 @@ app.get("/me", authenticateToken, async (req: any, res) => {
 });
 
 // Scan NFC
-// Scan NFC
 app.post("/scan", authenticateToken, async (req: any, res) => {
     const { stallId } = req.body;
 

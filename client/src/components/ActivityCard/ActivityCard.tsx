@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import BackButton from "../BackButton.tsx";
-import api from "../../api/axois.ts";
+import BackButton from "../BackButton";
+import api from "../../api/axois";
 
 export default function ActivityCard() {
     const [points, setPoints] = useState(0);

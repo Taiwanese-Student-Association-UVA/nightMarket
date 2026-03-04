@@ -1,4 +1,4 @@
-import BackButton from "../BackButton.tsx";
+import BackButton from "../BackButton";
 
 export default function Map() {
     return (

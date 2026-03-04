@@ -5,7 +5,7 @@ import ActivityCard from "./components/ActivityCard/ActivityCard";
 import Schedule from "./components/Schedule/Schedule";
 import Map from "./components/Map/Map";
 import Menu from "./components/Menu/Menu";
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
