@@ -1,3 +1,10 @@
+// TODO:
+// - create the stamp card, every time an nfc tag is scanned it should add a stamp onto the card.
+//   - just create two images? one for the activity card and one for the stamp icon?
+//   - one should be an area to track games played, maybe have a thing saying every x stamps earns a reward?
+//   - should i ask pr to draw the images or just AI them
+// - move the scanning / rewards logic to the nfc tags. After finishing frontend?
+
 import { useEffect, useState } from "react";
 import BackButton from "../BackButton";
 import api from "../../api/axois";
