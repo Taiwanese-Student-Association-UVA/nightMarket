@@ -6,8 +6,14 @@ import jwt from "jsonwebtoken";
 import { supabase } from "./supabase";
 
 const app = express();
-const PORT = 4000;
 const JWT_SECRET = process.env.JWT_SECRET!;
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+
 
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
