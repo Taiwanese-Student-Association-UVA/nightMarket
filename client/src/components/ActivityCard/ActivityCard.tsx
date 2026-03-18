@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import BackButton from "../BackButton";
-import api from "../../api/axois";
+import api from "../../api/axios";
 
 export default function ActivityCard() {
     const [points, setPoints] = useState(0);
