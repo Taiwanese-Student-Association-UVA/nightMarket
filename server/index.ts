@@ -146,7 +146,3 @@ app.post("/redeem", authenticateToken, async (req: any, res) => {
 
     res.json({ message: "Reward redeemed!" });
 });
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
