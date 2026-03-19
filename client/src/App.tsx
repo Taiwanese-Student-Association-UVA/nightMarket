@@ -6,6 +6,7 @@ import Schedule from "./components/Schedule/Schedule";
 import Map from "./components/Map/Map";
 import Menu from "./components/Menu/Menu";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScanRedirect from "./components/Scan/ScanRedirect";
 
 function App() {
     return (
@@ -18,7 +19,7 @@ function App() {
                 <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
                 <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                 <Route path="/menu" element={<ProtectedRoute><Menu /></ProtectedRoute>} />
-
+                <Route path="/scan/:stallId" element={<ScanRedirect />} />
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
         </BrowserRouter>
