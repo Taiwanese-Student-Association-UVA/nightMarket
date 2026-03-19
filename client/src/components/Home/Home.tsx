@@ -16,6 +16,7 @@ export default function Home() {
           width: "100vw",
           height: "auto",
           display: "block",
+          transform: "translateX(-2px)"
         }}
       >
         <rect width="389" height="1187" fill="white" />
