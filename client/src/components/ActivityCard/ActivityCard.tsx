@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import BackButton from "../BackButton";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
 export default function ActivityCard() {
     const [points, setPoints] = useState(0);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const fetchUser = async () => {
         try {
@@ -36,6 +36,11 @@ export default function ActivityCard() {
         }
     };
 
+    const logout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
     // Handle NFC redirect securely
     useEffect(() => {
         fetchUser();
@@ -46,7 +51,6 @@ export default function ActivityCard() {
         const cameFromScan = location.state?.fromScan;
 
         if (stallId && cameFromScan) {
-            // remove stallId so it doesn't trigger twice
             const url = new URL(window.location.href);
             url.searchParams.delete("stallId");
             window.history.replaceState({}, "", url.toString());
@@ -59,7 +63,9 @@ export default function ActivityCard() {
 
     return (
         <div style={{ padding: 20 }}>
-            <BackButton />
+            {/* 🔥 LOGOUT BUTTON */}
+            <button onClick={logout}>Logout</button>
+
             <h1>Activity Card</h1>
 
             <div style={{ padding: 20 }}>

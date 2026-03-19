@@ -36,6 +36,7 @@ export default function AuthPage() {
             />
 
             <div>
+                <button onClick={() => navigate("/")}>Back</button>
                 <button onClick={() => submit(true)}>Register</button>
                 <button onClick={() => submit(false)}>Login</button>
             </div>
