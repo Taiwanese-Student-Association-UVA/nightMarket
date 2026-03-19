@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Home() {
+type Props = {
+  openLogin: () => void;
+};
+
+export default function Home({ openLogin }: Props) {
   const navigate = useNavigate();
 
   return (
@@ -12,7 +16,7 @@ export default function Home() {
         <rect width="389" height="1187" fill="white" />
 
         {/* TSA WEBSITE */}
-        <g onClick={() => window.location.href = "https://tsaatuva.org"}>
+        <g onClick={() => (window.location.href = "https://tsaatuva.org")} style={{ cursor: "pointer" }}>
           <path d="M17 1057L372 1106.5V1169H18.5L17 1057Z" fill="#FFE9E9" stroke="black" strokeWidth="3" />
           <text x="195" y="1125" textAnchor="middle" fontSize="14" pointerEvents="none">
             TSA WEBSITE
@@ -20,7 +24,7 @@ export default function Home() {
         </g>
 
         {/* DIRECTIONS */}
-        <g onClick={() => window.location.href = "https://maps.app.goo.gl/ZwNFrEBbVZn1Pw1u8"}>
+        <g onClick={() => (window.location.href = "https://maps.app.goo.gl/ZwNFrEBbVZn1Pw1u8")} style={{ cursor: "pointer" }}>
           <path d="M372 941L18.5 999V1043L372 1091V941Z" fill="#FFE9E9" stroke="black" strokeWidth="3" />
           <text x="195" y="1015" textAnchor="middle" fontSize="14" pointerEvents="none">
             DIRECTIONS
@@ -76,7 +80,7 @@ export default function Home() {
         </g>
 
         {/* LOGIN */}
-        <g onClick={() => navigate("/login")} style={{ cursor: "pointer" }}>
+        <g onClick={openLogin} style={{ cursor: "pointer" }}>
           <path d="M372 18H144L189.792 254.765L372 192.379V18Z" fill="#FFE9E9" stroke="black" strokeWidth="3" />
           <text x="290" y="130" textAnchor="middle" fontSize="14" pointerEvents="none">
             LOGIN
@@ -84,7 +88,7 @@ export default function Home() {
         </g>
 
         {/* REGISTER */}
-        <g onClick={() => navigate("/login")} style={{ cursor: "pointer" }}>
+        <g onClick={openLogin} style={{ cursor: "pointer" }}>
           <path d="M126.702 18H17V314.895L172.371 260.026L126.702 18Z" fill="#FFE9E9" stroke="black" strokeWidth="3" />
           <text x="80" y="140" textAnchor="middle" fontSize="14" pointerEvents="none">
             REGISTER
