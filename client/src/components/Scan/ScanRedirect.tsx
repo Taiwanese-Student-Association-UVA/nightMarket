@@ -1,8 +1,15 @@
-// src/pages/ScanRedirect.tsx
 import { Navigate, useParams } from "react-router-dom";
 
 export default function ScanRedirect() {
-  const { stallId } = useParams();
+    const { stallId } = useParams();
 
-  return <Navigate to={`/activity?stallId=${stallId}`} replace />;
+    if (!stallId) return <Navigate to="/login" replace />;
+
+    return (
+        <Navigate
+            to={`/activity?stallId=${stallId}`}
+            state={{ fromScan: true }}
+            replace
+        />
+    );
 }
