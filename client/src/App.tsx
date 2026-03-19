@@ -12,8 +12,13 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/login" element={<Login />} />
-
+                <Route path="/" element={<Home />} />
+                <Route path="/activity" element={<ActivityCard />} />
+                <Route path="/schedule" element={<Schedule />} />
+                <Route path="/map" element={<Map />} />
+                <Route path="/menu" element={<Menu />} />
+                                <Route path="/login" element={<Login />} />
+{/*
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                 <Route path="/activity" element={<ProtectedRoute><ActivityCard /></ProtectedRoute>} />
                 <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
@@ -21,6 +26,7 @@ function App() {
                 <Route path="/menu" element={<ProtectedRoute><Menu /></ProtectedRoute>} />
                 <Route path="/scan/:stallId" element={<ScanRedirect />} />
                 <Route path="*" element={<Navigate to="/login" />} />
+*/}                
             </Routes>
         </BrowserRouter>
     );
