@@ -16,7 +16,7 @@ export default function Home() {
           width: "100vw",
           height: "auto",
           display: "block",
-          transform: "translateX(-2px)"
+          //transform: "translateX(-1px)"
         }}
       >
         <rect width="389" height="1187" fill="white" />
@@ -67,7 +67,7 @@ export default function Home() {
           fill="#FFE9E9"
           stroke="black"
           strokeWidth="3"
-          onClick={() => navigate("/Schedule")}
+          onClick={() => navigate("/schedule")}
           style={{ cursor: "pointer" }}
         />
 
@@ -77,7 +77,7 @@ export default function Home() {
           fill="#FFE9E9"
           stroke="black"
           strokeWidth="3"
-          onClick={() => navigate("/Map")}
+          onClick={() => navigate("/map")}
           style={{ cursor: "pointer" }}
         />
 
@@ -87,7 +87,7 @@ export default function Home() {
           fill="#FFE9E9"
           stroke="black"
           strokeWidth="3"
-          onClick={() => navigate("/Menu")}
+          onClick={() => navigate("/menu")}
         />
 
         {/* NIGHT MARKET LOGO*/}
@@ -104,7 +104,7 @@ export default function Home() {
           fill="#FFE9E9"
           stroke="black"
           strokeWidth="3"
-          onClick={() => navigate("/Login")}
+          onClick={() => navigate("/login")}
         />
 
         {/* Register*/}
@@ -113,7 +113,7 @@ export default function Home() {
           fill="#FFE9E9"
           stroke="black"
           strokeWidth="3"
-          onClick={() => navigate("/Login")}
+          onClick={() => navigate("/login")}
         />
       </svg>
     </div>

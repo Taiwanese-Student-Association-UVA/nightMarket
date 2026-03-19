@@ -13,11 +13,13 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/activity" element={<ActivityCard />} />
+                <Route path="/activity" element={<ProtectedRoute><ActivityCard /></ProtectedRoute>} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/map" element={<Map />} />
                 <Route path="/menu" element={<Menu />} />
-                                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/scan/:stallId" element={<ScanRedirect />} />
+                <Route path="*" element={<Navigate to="/login" />} />
 {/*
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                 <Route path="/activity" element={<ProtectedRoute><ActivityCard /></ProtectedRoute>} />

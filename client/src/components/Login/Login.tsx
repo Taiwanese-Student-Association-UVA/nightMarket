@@ -12,7 +12,7 @@ export default function AuthPage() {
             const url = register ? "/register" : "/login";
             const res = await api.post(url, { username, password });
             localStorage.setItem("token", res.data.token);
-            navigate("/");
+            navigate("/activity");
         } catch (err: any) {
             alert(err.response?.data?.message || "Error");
         }
