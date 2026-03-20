@@ -18,7 +18,7 @@ export default function ActivityCard() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:4000/me", {
+      const res = await axios.get("https://nightmarket-w4xw.onrender.com/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
