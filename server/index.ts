@@ -89,7 +89,6 @@ app.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-// Current user
 app.get("/me", authenticateToken, async (req: any, res) => {
   const { data: user, error: userError } = await supabase
     .from("users")
