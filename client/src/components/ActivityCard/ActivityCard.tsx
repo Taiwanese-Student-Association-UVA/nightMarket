@@ -1,89 +1,150 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import stampCard from "../../assets/StampCard.svg";
+import singleStamp from "../../assets/singleStamp.svg";
+import backStamp from "../../assets/back-button.png";
+import claimButton from "../../assets/claim-button.svg";
+import background from "../../assets/BG.png";
+import lantern from "../../assets/lantern.png";
 
 export default function ActivityCard() {
-    const [points, setPoints] = useState(0);
-    const location = useLocation();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [scannedStalls, setScannedStalls] = useState<number[]>([]);
 
-    const fetchUser = async () => {
-        try {
-            const res = await api.get("/me");
-            setPoints(res.data.points);
-        } catch (err) {
-            console.error("Failed to fetch user");
-        }
-    };
+  const fetchUser = async () => {
+    try {
+      const res = await api.get("/me");
+      console.log("ME DATA:", res.data);
+      setScannedStalls((res.data.scannedStalls || []).map(Number));
+    } catch (err) {
+      console.error("Failed to fetch user", err);
+    }
+  };
 
-    const scanStall = async (stallId: number) => {
-        try {
-            const res = await api.post("/scan", { stallId });
-            alert(res.data.message);
-            fetchUser();
-        } catch (err: any) {
-            alert(err.response?.data?.message || "Scan failed");
-        }
-    };
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
-    const redeemReward = async () => {
-        try {
-            const res = await api.post("/redeem");
-            alert(res.data.message);
-            fetchUser();
-        } catch (err: any) {
-            alert(err.response?.data?.message || "Redemption failed");
-        }
-    };
+  const stampPositions = [
+    { id: 1, top: "43%", left: "16%", rotate: -9 },
+    { id: 2, top: "43%", left: "33%", rotate: 0 },
+    { id: 3, top: "42%", left: "50%", rotate: 9 },
+    { id: 4, top: "43%", left: "68%", rotate: -2 },
+    { id: 5, top: "42%", left: "85%", rotate: -9 },
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
-    };
+    { id: 6, top: "70%", left: "16%", rotate: 9 },
+    { id: 7, top: "70%", left: "33%", rotate: 1 },
+    { id: 8, top: "69%", left: "50%", rotate: 2 },
+    { id: 9, top: "70%", left: "67%", rotate: -3 },
+    { id: 10, top: "70%", left: "84.5%", rotate: 2 },
+  ];
 
-    // Handle NFC redirect securely
-    useEffect(() => {
-        fetchUser();
+  return (
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        width: "100vw",
+        minHeight: "100vh",
+        overflowX: "hidden",
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <img
+        src={lantern}
+        alt="Lantern"
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
+        }}
+      />
 
-        const params = new URLSearchParams(window.location.search);
-        const stallId = params.get("stallId");
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "100%",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={stampCard}
+          alt="Stamp Card"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+        />
 
-        const cameFromScan = location.state?.fromScan;
+        {stampPositions
+          .filter((stamp) => scannedStalls.includes(stamp.id))
+          .map((stamp) => (
+            <img
+              key={stamp.id}
+              src={singleStamp}
+              alt={`Stamp ${stamp.id}`}
+              style={{
+                position: "absolute",
+                top: stamp.top,
+                left: stamp.left,
+                width: "17%",
+                height: "auto",
+                transform: `translate(-50%, -50%) rotate(${stamp.rotate}deg)`,
+                transformOrigin: "center",
+                zIndex: 10,
+                pointerEvents: "none",
+              }}
+            />
+          ))}
 
-        if (stallId && cameFromScan) {
-            const url = new URL(window.location.href);
-            url.searchParams.delete("stallId");
-            window.history.replaceState({}, "", url.toString());
+        <img
+          src={backStamp}
+          alt="Back"
+          onClick={() => navigate(-1)}
+          draggable={false}
+          style={{
+            position: "absolute",
+            top: "15%",
+            right: "10%",
+            width: "12%",
+            height: "auto",
+            zIndex: 20,
+            cursor: "pointer",
+          }}
+        />
+      </div>
 
-            scanStall(Number(stallId));
-        }
-    }, []);
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 10,
+          paddingBottom: 20,
+        }}
+      >
+        <img
+          src={claimButton}
+          alt="Claim Reward"
+          onClick={() => console.log("Claim reward")}
+          style={{
+            width: "clamp(120px, 40vw, 500px)",
+            height: "auto",
+            display: "block",
+            cursor: "pointer",
+          }}
+        />
+      </div>
 
-    const rewardsAvailable = Math.floor(points / 40);
-
-    return (
-        <div style={{ padding: 20 }}>
-            {/* 🔥 LOGOUT BUTTON */}
-            <button onClick={logout}>Logout</button>
-
-            <h1>Activity Card</h1>
-
-            <div style={{ padding: 20 }}>
-                <p>Points: {points}</p>
-                <p>Rewards available: {rewardsAvailable}</p>
-
-                <h2>Redeem Reward</h2>
-                <button onClick={redeemReward} disabled={rewardsAvailable < 1}>
-                    Redeem Reward (costs 40 points)
-                </button>
-
-                <h2>Scan Stall</h2>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(id => (
-                    <button key={id} onClick={() => scanStall(id)}>
-                        Stall {id}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
+      <div style={{ textAlign: "center", paddingBottom: 20 }}>
+        <p>Scanned stalls: {JSON.stringify(scannedStalls)}</p>
+      </div>
+    </div>
+  );
 }

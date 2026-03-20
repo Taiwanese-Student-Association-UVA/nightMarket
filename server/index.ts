@@ -91,13 +91,31 @@ app.post("/login", async (req, res) => {
 
 // Current user
 app.get("/me", authenticateToken, async (req: any, res) => {
-  const { data: user } = await supabase
+  const { data: user, error: userError } = await supabase
     .from("users")
     .select("id, username, points")
     .eq("id", req.user.id)
     .single();
 
-  res.json(user);
+  if (userError || !user) {
+    return res.status(500).json({ message: "Could not fetch user" });
+  }
+
+  const { data: scans, error: scansError } = await supabase
+    .from("scans")
+    .select("stall_id")
+    .eq("user_id", req.user.id);
+
+  if (scansError) {
+    return res.status(500).json({ message: "Could not fetch scanned stalls" });
+  }
+
+  const scannedStalls = (scans || []).map((scan: any) => Number(scan.stall_id));
+
+  res.json({
+    ...user,
+    scannedStalls,
+  });
 });
 
 // Scan NFC
