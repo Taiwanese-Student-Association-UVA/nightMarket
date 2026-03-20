@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../api/axios";
-import stampCard from "../../assets/StampCard.svg";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import stampCard from "../../assets/stampCard.svg";
 import singleStamp from "../../assets/singleStamp.svg";
 import backStamp from "../../assets/back-button.png";
 import claimButton from "../../assets/claim-button.svg";
@@ -10,21 +10,75 @@ import lantern from "../../assets/lantern.png";
 
 export default function ActivityCard() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
+
+  const token = localStorage.getItem("token");
 
   const fetchUser = async () => {
     try {
-      const res = await api.get("/me");
+      const res = await axios.get("http://localhost:4000/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       console.log("ME DATA:", res.data);
-      setScannedStalls((res.data.scannedStalls || []).map(Number));
+
+      setPoints(res.data?.points || 0);
+      setScannedStalls(
+        Array.isArray(res.data?.scannedStalls)
+          ? res.data.scannedStalls.map(Number)
+          : []
+      );
     } catch (err) {
       console.error("Failed to fetch user", err);
     }
   };
 
+  const scanStall = async (stallId: number) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/scan",
+        { stallId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert(res.data.message);
+      await fetchUser();
+    } catch (err: any) {
+      console.error("Scan failed:", err);
+      alert(err.response?.data?.message || "Scan failed");
+    }
+  };
+
   useEffect(() => {
-    fetchUser();
-  }, []);
+    const run = async () => {
+      await fetchUser();
+
+      const params = new URLSearchParams(window.location.search);
+      const stallId = params.get("stallId");
+      const cameFromScan = location.state && (location.state as any).fromScan;
+
+      if (stallId && cameFromScan) {
+        await scanStall(Number(stallId));
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete("stallId");
+        window.history.replaceState({}, "", url.toString());
+      }
+    };
+
+    run();
+  }, [location.state]);
+
+  const rewardsAvailable = Math.floor(points / 40);
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -32,7 +86,6 @@ export default function ActivityCard() {
     { id: 3, top: "42%", left: "50%", rotate: 9 },
     { id: 4, top: "43%", left: "68%", rotate: -2 },
     { id: 5, top: "42%", left: "85%", rotate: -9 },
-
     { id: 6, top: "70%", left: "16%", rotate: 9 },
     { id: 7, top: "70%", left: "33%", rotate: 1 },
     { id: 8, top: "69%", left: "50%", rotate: 2 },
@@ -132,18 +185,19 @@ export default function ActivityCard() {
         <img
           src={claimButton}
           alt="Claim Reward"
-          onClick={() => console.log("Claim reward")}
+          onClick={
+            rewardsAvailable >= 1
+              ? () => console.log("Claim reward")
+              : undefined
+          }
           style={{
             width: "clamp(120px, 40vw, 500px)",
             height: "auto",
             display: "block",
-            cursor: "pointer",
+            cursor: rewardsAvailable >= 1 ? "pointer" : "not-allowed",
+            opacity: rewardsAvailable >= 1 ? 1 : 0.5,
           }}
         />
-      </div>
-
-      <div style={{ textAlign: "center", paddingBottom: 20 }}>
-        <p>Scanned stalls: {JSON.stringify(scannedStalls)}</p>
       </div>
     </div>
   );

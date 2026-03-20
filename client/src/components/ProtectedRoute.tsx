@@ -1,20 +1,15 @@
 import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
 type Props = {
   children: ReactNode;
-  openLogin: () => void;
 };
 
-export default function ProtectedRoute({ children, openLogin }: Props) {
+export default function ProtectedRoute({ children }: Props) {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h2>You need to log in to view this page.</h2>
-        <button onClick={openLogin}>Login</button>
-      </div>
-    );
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
