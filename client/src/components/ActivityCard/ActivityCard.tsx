@@ -39,7 +39,7 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  const rewardsAvailable = Math.floor(points / 40);
+  const rewardsAvailable = Math.floor(points / 5);
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
