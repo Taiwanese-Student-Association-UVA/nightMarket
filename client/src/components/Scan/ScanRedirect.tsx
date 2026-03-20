@@ -22,7 +22,7 @@ export default function ScanRedirect() {
 
       try {
         await axios.post(
-          "http://localhost:4000/scan",
+          "https://nightmarket-w4xw.onrender.com/scan",
           { stallId: Number(stallId) },
           {
             headers: {
