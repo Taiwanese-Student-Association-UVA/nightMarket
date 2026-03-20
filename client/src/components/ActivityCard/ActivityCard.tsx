@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import stampCard from "../../assets/stampCard.svg";
 import singleStamp from "../../assets/singleStamp.svg";
@@ -10,22 +10,19 @@ import lantern from "../../assets/lantern.png";
 
 export default function ActivityCard() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
 
-  const token = localStorage.getItem("token");
-
   const fetchUser = async () => {
     try {
+      const token = localStorage.getItem("token");
+
       const res = await axios.get("http://localhost:4000/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("ME DATA:", res.data);
 
       setPoints(res.data?.points || 0);
       setScannedStalls(
@@ -38,45 +35,9 @@ export default function ActivityCard() {
     }
   };
 
-  const scanStall = async (stallId: number) => {
-    try {
-      const res = await axios.post(
-        "http://localhost:4000/scan",
-        { stallId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert(res.data.message);
-      await fetchUser();
-    } catch (err: any) {
-      console.error("Scan failed:", err);
-      alert(err.response?.data?.message || "Scan failed");
-    }
-  };
-
   useEffect(() => {
-    const run = async () => {
-      await fetchUser();
-
-      const params = new URLSearchParams(window.location.search);
-      const stallId = params.get("stallId");
-      const cameFromScan = location.state && (location.state as any).fromScan;
-
-      if (stallId && cameFromScan) {
-        await scanStall(Number(stallId));
-
-        const url = new URL(window.location.href);
-        url.searchParams.delete("stallId");
-        window.history.replaceState({}, "", url.toString());
-      }
-    };
-
-    run();
-  }, [location.state]);
+    fetchUser();
+  }, []);
 
   const rewardsAvailable = Math.floor(points / 40);
 
