@@ -1,18 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import stampCard from "../../assets/StampCard.svg";
-import stamps from "../../assets/stamp.svg";
+import singleStamp from "../../assets/singleStamp.svg";
 import backStamp from "../../assets/back-button.png";
 import claimButton from "../../assets/claim-button.svg";
 import background from "../../assets/BG.png";
 import lantern from "../../assets/lantern.png";
 
-
 export default function Menu() {
   const navigate = useNavigate();
 
+  const stampPositions = [
+    { id: 1, top: "43%", left: "16%", rotate: -9},
+    { id: 2, top: "43%", left: "33%", rotate: 0 },
+    { id: 3, top: "42%", left: "50%", rotate: 9 },
+    { id: 4, top: "43%", left: "68%", rotate: -2 },
+    { id: 5, top: "42%", left: "85%", rotate: -9 },
+
+    { id: 6, top: "70%", left: "16%", rotate: 9 },
+    { id: 7, top: "70%", left: "33%",  rotate: 1},
+    { id: 8, top: "69%", left: "50%",  rotate:  2},
+    { id: 9, top: "70%", left: "67%", rotate: -3 },
+    { id: 10, top: "70%", left: "84.5%", rotate: 2 },
+  ];
+
   return (
     <div
-    style={{
+      style={{
         margin: 0,
         padding: 0,
         width: "100%",
@@ -22,31 +35,24 @@ export default function Menu() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        
-        // ADD THESE THREE LINES:
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+      }}
+    >
+      <img
+        src={lantern}
+        alt="Lantern"
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
         }}
-        >
-        <img
-            src={lantern}
-            alt="Lantern"
-            style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-            }}
-        />
+      />
 
       <div
         style={{
           position: "relative",
-          width: "100vw",
+          width: "100%",
         }}
       >
-
-
         <img
           src={stampCard}
           alt="Stamp Card"
@@ -54,29 +60,25 @@ export default function Menu() {
             width: "100%",
             height: "auto",
             display: "block",
-            margin: "0 auto",
           }}
         />
 
+        {stampPositions.map((stamp) => (
         <img
-        src={stamps}
-        alt="Stamps"
-        style={{
+            key={stamp.id}
+            src={singleStamp}
+            alt={`Stamp ${stamp.id}`}
+            style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-
-            width: "100%",
-            height: "auto",
-
-            transform: "translate(-50%, -42%) scale(0.9)",  // 👈 KEY
-            transformOrigin: "center",
-
+            top: stamp.top,
+            left: stamp.left,
+            width: "17%",
+            transform: `translate(-50%, -50%) rotate(${stamp.rotate}deg)`,
             zIndex: 10,
             pointerEvents: "none",
-        }}
+            }}
         />
-   
+        ))}
 
         <img
           src={backStamp}
@@ -94,18 +96,18 @@ export default function Menu() {
           }}
         />
       </div>
-        <img
-            src={claimButton}
-            alt="Claim Reward"
-            onClick={() => console.log("Claim reward")}
-            style={{
-            width: "clamp(20px, 40vw, 500px)",
-            margin: "10px auto",
-            display: "block",
-            cursor: "pointer",
+
+      <img
+        src={claimButton}
+        alt="Claim Reward"
+        onClick={() => console.log("Claim reward")}
+        style={{
+          width: "clamp(120px, 40vw, 500px)",
+          margin: "10px auto",
+          display: "block",
+          cursor: "pointer",
         }}
       />
-
     </div>
   );
 }
