@@ -10,15 +10,15 @@ export default function Menu() {
   const navigate = useNavigate();
 
   const stampPositions = [
-    { id: 1, top: "43%", left: "16%", rotate: -9},
+    { id: 1, top: "43%", left: "16%", rotate: -9 },
     { id: 2, top: "43%", left: "33%", rotate: 0 },
     { id: 3, top: "42%", left: "50%", rotate: 9 },
     { id: 4, top: "43%", left: "68%", rotate: -2 },
     { id: 5, top: "42%", left: "85%", rotate: -9 },
 
     { id: 6, top: "70%", left: "16%", rotate: 9 },
-    { id: 7, top: "70%", left: "33%",  rotate: 1},
-    { id: 8, top: "69%", left: "50%",  rotate:  2},
+    { id: 7, top: "70%", left: "33%", rotate: 1 },
+    { id: 8, top: "69%", left: "50%", rotate: 2 },
     { id: 9, top: "70%", left: "67%", rotate: -3 },
     { id: 10, top: "70%", left: "84.5%", rotate: 2 },
   ];
@@ -28,7 +28,7 @@ export default function Menu() {
       style={{
         margin: 0,
         padding: 0,
-        width: "100%",
+        width: "100vw",
         minHeight: "100vh",
         overflowX: "hidden",
         backgroundImage: `url(${background})`,
@@ -51,6 +51,8 @@ export default function Menu() {
         style={{
           position: "relative",
           width: "100%",
+          maxWidth: "100%",
+          overflow: "hidden",
         }}
       >
         <img
@@ -64,20 +66,22 @@ export default function Menu() {
         />
 
         {stampPositions.map((stamp) => (
-        <img
+          <img
             key={stamp.id}
             src={singleStamp}
             alt={`Stamp ${stamp.id}`}
             style={{
-            position: "absolute",
-            top: stamp.top,
-            left: stamp.left,
-            width: "17%",
-            transform: `translate(-50%, -50%) rotate(${stamp.rotate}deg)`,
-            zIndex: 10,
-            pointerEvents: "none",
+              position: "absolute",
+              top: stamp.top,
+              left: stamp.left,
+              width: "17%",
+              height: "auto",
+              transform: `translate(-50%, -50%) rotate(${stamp.rotate}deg)`,
+              transformOrigin: "center",
+              zIndex: 10,
+              pointerEvents: "none",
             }}
-        />
+          />
         ))}
 
         <img
@@ -97,17 +101,27 @@ export default function Menu() {
         />
       </div>
 
-      <img
-        src={claimButton}
-        alt="Claim Reward"
-        onClick={() => console.log("Claim reward")}
+      <div
         style={{
-          width: "clamp(120px, 40vw, 500px)",
-          margin: "10px auto",
-          display: "block",
-          cursor: "pointer",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 10,
+          paddingBottom: 20,
         }}
-      />
+      >
+        <img
+          src={claimButton}
+          alt="Claim Reward"
+          onClick={() => console.log("Claim reward")}
+          style={{
+            width: "clamp(120px, 40vw, 500px)",
+            height: "auto",
+            display: "block",
+            cursor: "pointer",
+          }}
+        />
+      </div>
     </div>
   );
 }
