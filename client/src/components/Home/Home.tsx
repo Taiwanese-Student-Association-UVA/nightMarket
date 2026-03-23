@@ -1,200 +1,84 @@
 import { useNavigate } from "react-router-dom";
+import headerImage from "../../assets/home/header.svg";
+import panelsImage from "../../assets/home/panels.svg";
+import wordsImage from "../../assets/home/words.svg";
 
 export default function Home() {
   const navigate = useNavigate();
 
   return (
-      <div style={{ width: "100vw", background: "white" }}>
-        <svg
-            viewBox="0 0 389 1187"
-            style={{ width: "100vw", height: "auto", display: "block" }}
-        >
-          <rect width="389" height="1187" fill="white" />
-
-          {/* ACTIVITY BUTTON AT TOP */}
-          <g
-              onClick={() => navigate("/activity")}
-              style={{ cursor: "pointer" }}
-          >
-            <path
-                d="M17 100L195.5 60L372 100V160L17 160Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="195"
-                y="120"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              ACTIVITY
-            </text>
-          </g>
-
-          {/* NIGHT MARKET LOGO */}
-          <g>
-            <path
-                d="M372 212.673L17 336.5V481.5L372 534.5V212.673Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="195"
-                y="400"
-                textAnchor="middle"
-                fontSize="16"
-                fontWeight="bold"
-                pointerEvents="none"
-            >
-              NIGHT MARKET
-            </text>
-          </g>
-
-          {/* MENU */}
-          <g onClick={() => navigate("/menu")} style={{ cursor: "pointer" }}>
-            <path
-                d="M17 660.647V501.301L256.076 538.848L243.5 606L17 660.647Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="130"
-                y="580"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              MENU
-            </text>
-          </g>
-
-          {/* MAP */}
-          <g onClick={() => navigate("/map")} style={{ cursor: "pointer" }}>
-            <path
-                d="M372 556.922L270.984 541.427L225.5 790.5L372 771.5V556.922Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="310"
-                y="670"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              MAP
-            </text>
-          </g>
-
-          {/* SCHEDULE */}
-          <g onClick={() => navigate("/schedule")} style={{ cursor: "pointer" }}>
-            <path
-                d="M207.5 794L239.699 623L17 676V823L207.5 794Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="120"
-                y="730"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              SCHEDULE
-            </text>
-          </g>
-
-          {/* VENDORS */}
-          <g style={{ cursor: "pointer" }}>
-            <path
-                d="M18.5 983V842L163.5 820L195.5 952.5L18.5 983Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="110"
-                y="900"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              VENDORS
-            </text>
-          </g>
-
-          {/* SPONSORS */}
-          <g style={{ cursor: "pointer" }}>
-            <path
-                d="M209 950L175 817L372 790.5V923L209 950Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="290"
-                y="870"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              SPONSORS
-            </text>
-          </g>
-
-          {/* DIRECTIONS */}
-          <g
-              onClick={() =>
-                  (window.location.href =
-                      "https://maps.app.goo.gl/ZwNFrEBbVZn1Pw1u8")
-              }
-              style={{ cursor: "pointer" }}
-          >
-            <path
-                d="M372 941L18.5 999V1043L372 1091V941Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="195"
-                y="1015"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              DIRECTIONS
-            </text>
-          </g>
-
-          {/* TSA WEBSITE */}
-          <g
-              onClick={() => (window.location.href = "https://tsaatuva.org")}
-              style={{ cursor: "pointer" }}
-          >
-            <path
-                d="M17 1057L372 1106.5V1169H18.5L17 1057Z"
-                fill="#FFE9E9"
-                stroke="black"
-                strokeWidth="3"
-            />
-            <text
-                x="195"
-                y="1125"
-                textAnchor="middle"
-                fontSize="14"
-                pointerEvents="none"
-            >
-              TSA WEBSITE
-            </text>
-          </g>
-        </svg>
+    <div style={{ width: "100vw", background: "white", padding: "4vh 4vw", boxSizing: "border-box" }}>
+      <div
+        style={{
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <img
+          src={panelsImage}
+          alt="Night Market Home"
+          style={{ width: "100%", height: "auto", display: "block" }}
+        />
+        <img
+          src={headerImage}
+          alt="Night Market Header"
+          style={{
+            position: "absolute",
+            left: "0%",
+            top: "0%",
+            width: "100%",
+            height: "auto",
+            pointerEvents: "none",
+          }}
+        />
+        <img
+          src={wordsImage}
+          alt="Panel Labels"
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "94%",
+            height: "auto",
+            pointerEvents: "none",
+          }}
+        />
+        <button
+          aria-label="Activity"
+          onClick={() => navigate("/activity")}
+          style={{ position: "absolute", top: "5%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
+        />
+        <button
+          aria-label="Menu"
+          onClick={() => navigate("/menu")}
+          style={{ position: "absolute", top: "42%", left: "4%", width: "62%", height: "16%", opacity: 0, cursor: "pointer" }}
+        />
+        <button
+          aria-label="Map"
+          onClick={() => navigate("/map")}
+          style={{ position: "absolute", top: "45%", left: "58%", width: "38%", height: "21%", opacity: 0, cursor: "pointer" }}
+        />
+        <button
+          aria-label="Schedule"
+          onClick={() => navigate("/schedule")}
+          style={{ position: "absolute", top: "57%", left: "4%", width: "60%", height: "14%", opacity: 0, cursor: "pointer" }}
+        />
+        <button
+          aria-label="Directions"
+          onClick={() => {
+            window.location.href = "https://maps.app.goo.gl/ZwNFrEBbVZn1Pw1u8";
+          }}
+          style={{ position: "absolute", top: "79%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
+        />
+        <button
+          aria-label="TSA Website"
+          onClick={() => {
+            window.location.href = "https://tsaatuva.org";
+          }}
+          style={{ position: "absolute", top: "90%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
+        />
       </div>
+    </div>
   );
 }
