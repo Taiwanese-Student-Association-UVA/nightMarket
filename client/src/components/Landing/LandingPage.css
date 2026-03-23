@@ -1,0 +1,79 @@
+/* whole page */
+.landing-page {
+    width: 100%;
+    min-height: 100vh;
+    background: white;
+}
+
+/* image container */
+.comic-container {
+    position: relative;
+    width: 100%;
+}
+
+/* image fills screen width */
+.comic-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ripple locked to image */
+.hand-ripple {
+    position: absolute;
+    top: 42%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* ripple animation */
+.ripple {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border: 3px solid #ff5a3c;
+    border-radius: 50%;
+    animation: ripple 2s infinite;
+}
+
+.delay {
+    animation-delay: 1s;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* floating login text */
+.login-text {
+    position: absolute;
+    top: -28px;
+    color: #ff5a3c;
+    font-weight: bold;
+    font-size: 15px;
+    white-space: nowrap;
+    animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+.hand-ripple:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}

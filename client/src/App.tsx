@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginModalPage from "./components/Modal/LoginModalPage";
+
+import LandingPage from "./components/Landing/LandingPage";
 import Home from "./components/Home/Home";
 import ActivityCard from "./components/ActivityCard/ActivityCard";
 import Schedule from "./components/Schedule/Schedule";
@@ -12,8 +13,9 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* LOGIN PAGE */}
-                <Route path="/" element={<LoginModalPage />} />
+
+                {/* LANDING PAGE */}
+                <Route path="/" element={<LandingPage />} />
 
                 {/* PROTECTED PAGES */}
                 <Route
@@ -24,6 +26,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/activity"
                     element={
@@ -32,6 +35,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/schedule"
                     element={
@@ -40,6 +44,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/map"
                     element={
@@ -48,6 +53,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/menu"
                     element={
@@ -56,6 +62,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/scan/:stallId"
                     element={
@@ -67,6 +74,7 @@ function App() {
 
                 {/* Catch all */}
                 <Route path="*" element={<Navigate to="/" replace />} />
+
             </Routes>
         </BrowserRouter>
     );
