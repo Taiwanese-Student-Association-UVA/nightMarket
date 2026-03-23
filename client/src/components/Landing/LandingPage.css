@@ -18,11 +18,11 @@
     display: block;
 }
 
-/* ripple locked to image */
+/* improved ripple container */
 .hand-ripple {
     position: absolute;
-    top: 49%;
-    left: 78%;
+    top: 48%;
+    left: 80%;
     transform: translate(-50%, -50%);
     width: 90px;
     height: 90px;
@@ -30,26 +30,31 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    overflow: visible; /* allow ripple to grow outside */
 }
 
-/* ripple animation */
+/* multiple ripple circles */
 .ripple {
     position: absolute;
-    width: 35px;
-    height: 35px;
-    border: 3px solid #6EC1FF;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    animation: ripple 2s infinite;
+    background: rgba(52, 152, 255, 1);
+    animation: rippleAnim 1.6s infinite;
 }
 
-.delay {
-    animation-delay: 1s;
+.ripple.delay {
+    animation-delay: 0.8s;
 }
 
-@keyframes ripple {
+@keyframes rippleAnim {
     0% {
-        transform: scale(1);
-        opacity: 0.8;
+        transform: scale(0.5);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(2);
+        opacity: 0.3;
     }
     100% {
         transform: scale(3);
@@ -57,23 +62,23 @@
     }
 }
 
-/* floating login text */
+/* floating login text stays same */
 .login-text {
     position: absolute;
     top: -28px;
-    color: #6EC1FF;
+    color: rgba(52, 152, 255);
     font-weight: bold;
     font-size: 15px;
     white-space: nowrap;
     animation: float 2s infinite ease-in-out;
 }
 
+/* click scaling effect */
+.hand-ripple:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
 @keyframes float {
     0% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
     100% { transform: translateY(0); }
-}
-
-.hand-ripple:active {
-    transform: translate(-50%, -50%) scale(0.95);
 }
