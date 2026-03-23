@@ -151,8 +151,10 @@ app.post("/scan", authenticateToken, async (req: any, res) => {
   res.json({ message: "Points added!" });
 });
 
-// Redeem reward
+// Redeem reward - 50 points (5 scans) per claim
 app.post("/redeem", authenticateToken, async (req: any, res) => {
+  const POINTS_PER_REWARD = 50;
+
   const { data: user, error: fetchError } = await supabase
     .from("users")
     .select("points")
@@ -163,18 +165,21 @@ app.post("/redeem", authenticateToken, async (req: any, res) => {
     return res.status(500).json({ message: "Could not fetch user" });
   }
 
-  if (user.points < 40) {
-    return res.status(400).json({ message: "Not enough points" });
+  const rewardsAvailable = Math.floor(user.points / POINTS_PER_REWARD);
+  if (rewardsAvailable < 1) {
+    return res.status(400).json({ message: "Not enough points. You need 50 points (5 stamps) to claim a reward." });
   }
+
+  const newPoints = user.points - POINTS_PER_REWARD;
 
   const { error: updateError } = await supabase
     .from("users")
-    .update({ points: user.points - 40 })
+    .update({ points: newPoints })
     .eq("id", req.user.id);
 
   if (updateError) {
     return res.status(500).json({ message: "Could not redeem points" });
   }
 
-  res.json({ message: "Reward redeemed!" });
+  res.json({ message: "Reward redeemed!", points: newPoints });
 });

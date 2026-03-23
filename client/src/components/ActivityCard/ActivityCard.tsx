@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import stampCard from "../../assets/stampCard.svg";
 import singleStamp from "../../assets/singleStamp.svg";
 import backStamp from "../../assets/back-button.png";
@@ -11,25 +11,24 @@ import lantern from "../../assets/lantern.png";
 export default function ActivityCard() {
   const navigate = useNavigate();
 
+  const POINTS_PER_REWARD = 50;
+
   const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const res = await api.get("/me");
 
-      const res = await axios.get("https://nightmarket-w4xw.onrender.com/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const pts = res.data?.points || 0;
+      const stalls = Array.isArray(res.data?.scannedStalls)
+        ? res.data.scannedStalls.map(Number)
+        : [];
 
-      setPoints(res.data?.points || 0);
-      setScannedStalls(
-        Array.isArray(res.data?.scannedStalls)
-          ? res.data.scannedStalls.map(Number)
-          : []
-      );
+      setPoints(pts);
+      setScannedStalls(stalls);
     } catch (err) {
       console.error("Failed to fetch user", err);
     }
@@ -39,7 +38,7 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  const rewardsAvailable = Math.floor(points / 50);
+  const rewardsAvailable = Math.floor(points / POINTS_PER_REWARD);
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -53,6 +52,22 @@ export default function ActivityCard() {
     { id: 9, top: "70%", left: "67%", rotate: -3 },
     { id: 10, top: "70%", left: "84.5%", rotate: 2 },
   ];
+
+  const handleClaimClick = async () => {
+    if (rewardsAvailable < 1 || isClaiming) return;
+
+    setIsClaiming(true);
+    try {
+      await api.post("/redeem");
+      await fetchUser();
+      setShowPopup(true);
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      alert(msg || "Failed to claim reward");
+    } finally {
+      setIsClaiming(false);
+    }
+  };
 
   return (
     <div
@@ -146,20 +161,66 @@ export default function ActivityCard() {
         <img
           src={claimButton}
           alt="Claim Reward"
-          onClick={
-            rewardsAvailable >= 1
-              ? () => console.log("Claim reward")
-              : undefined
-          }
+          onClick={rewardsAvailable > 0 && !isClaiming ? handleClaimClick : undefined}
           style={{
             width: "clamp(120px, 40vw, 500px)",
             height: "auto",
             display: "block",
-            cursor: rewardsAvailable >= 1 ? "pointer" : "not-allowed",
-            opacity: rewardsAvailable >= 1 ? 1 : 0.5,
+            cursor: rewardsAvailable > 0 && !isClaiming ? "pointer" : "not-allowed",
+            opacity: rewardsAvailable > 0 ? 1 : 0.5,
           }}
         />
       </div>
+
+      {showPopup && (
+        <div
+          onClick={() => setShowPopup(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "white",
+              padding: "24px",
+              borderRadius: "16px",
+              width: "80%",
+              maxWidth: "320px",
+              textAlign: "center",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
+            <p>
+              You have {rewardsAvailable} redeemable reward
+              {rewardsAvailable !== 1 ? "s" : ""}.
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              style={{
+                marginTop: "12px",
+                padding: "10px 18px",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

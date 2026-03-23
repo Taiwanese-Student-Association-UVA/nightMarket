@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import background from "../../assets/BG.png";
 
 export default function ScanRedirect() {
@@ -13,23 +13,13 @@ export default function ScanRedirect() {
       if (!stallId || ranRef.current) return;
       ranRef.current = true;
 
-      const token = localStorage.getItem("token");
-
-      if (!token) {
+      if (!localStorage.getItem("token")) {
         navigate("/login", { replace: true });
         return;
       }
 
       try {
-        await axios.post(
-          "https://nightmarket-w4xw.onrender.com/scan",
-          { stallId: Number(stallId) },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await api.post("/scan", { stallId: Number(stallId) });
       } catch (err: any) {
         console.error("Scan failed:", err);
       }
