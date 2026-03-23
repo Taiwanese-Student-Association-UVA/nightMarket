@@ -135,7 +135,7 @@ export default function ActivityCard() {
         <img
           src={backStamp}
           alt="Back"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           draggable={false}
           style={{
             position: "absolute",

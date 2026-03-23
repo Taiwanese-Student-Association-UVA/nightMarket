@@ -27,7 +27,7 @@ export default function LoginModal({ isOpen, onClose }: Props) {
       localStorage.setItem("token", res.data.token);
 
       onClose();
-      navigate("/activity");
+      navigate("/home");
     } catch (err: any) {
       const msg = err.response?.data?.message || "";
 
