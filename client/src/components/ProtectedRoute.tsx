@@ -1,23 +1,18 @@
 import type { ReactNode } from "react";
-import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 type Props = {
   children: ReactNode;
-  openLogin: () => void;
 };
 
-export default function ProtectedRoute({ children, openLogin }: Props) {
+export default function ProtectedRoute({ children }: Props) {
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      openLogin();
-    }
-  }, [token, openLogin]);
-
+  // If no token, redirect to login page
   if (!token) {
-    return null;
+    return <Navigate to="/" replace />;
   }
 
+  // Token exists, render children
   return <>{children}</>;
 }
