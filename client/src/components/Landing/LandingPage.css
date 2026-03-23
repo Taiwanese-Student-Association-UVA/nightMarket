@@ -73,12 +73,12 @@
     animation: float 2s infinite ease-in-out;
 }
 
-/* click scaling effect */
-.hand-ripple:active {
-    transform: translate(-50%, -50%) scale(0.95);
-}
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0); }
-}
+/*!* click scaling effect *!*/
+/*.hand-ripple:active {*/
+/*    transform: translate(-50%, -50%) scale(0.95);*/
+/*}*/
+/*@keyframes float {*/
+/*    0% { transform: translateY(0); }*/
+/*    50% { transform: translateY(-6px); }*/
+/*    100% { transform: translateY(0); }*/
+/*}*/
