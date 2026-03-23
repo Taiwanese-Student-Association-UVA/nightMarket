@@ -5,6 +5,9 @@ import "./LandingPage.css";
 export default function LandingPage() {
     const [isOpen, setIsOpen] = useState(false);
 
+    const openModal = () => setIsOpen(true);
+    const closeModal = () => setIsOpen(false);
+
     return (
         <div className="landing-page">
 
@@ -13,27 +16,46 @@ export default function LandingPage() {
                 <img
                     src="/landing-comic.png"
                     className="comic-image"
-                    alt="Festival Landing"
+                    alt="Taiwan Student Association Festival Landing"
                 />
 
-                {/* Ripple placed relative to image */}
+                {/* Interactive hand ripple */}
                 <div
                     className="hand-ripple"
-                    onClick={() => setIsOpen(true)}
+                    onClick={openModal}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Enter Nightmarket!"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            openModal();
+                        }
+                    }}
                 >
-                    <div className="ripple"></div>
-                    <div className="ripple delay"></div>
+                    {/* glow center */}
+                    <div className="ripple-core"></div>
 
+                    {/* ripple rings */}
+                    <div className="ripple"></div>
+                    <div className="ripple delay1"></div>
+                    <div className="ripple delay2"></div>
+
+                    {/* floating text */}
                     <div className="login-text">
-                        Register / Login
+                        Follow Me
                     </div>
+
+                    {/* sparkle particles */}
+                    <span className="spark spark1"></span>
+                    <span className="spark spark2"></span>
+                    <span className="spark spark3"></span>
                 </div>
 
             </div>
 
             <LoginModal
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={closeModal}
             />
         </div>
     );

@@ -1,84 +1,243 @@
-/* whole page */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&display=swap');
+/* ============================= */
+/* Whole page */
+/* ============================= */
+
 .landing-page {
     width: 100%;
     min-height: 100vh;
     background: white;
+    display: flex;
+    justify-content: center;
 }
 
-/* image container */
+/* ============================= */
+/* Image container */
+/* ============================= */
+
 .comic-container {
     position: relative;
     width: 100%;
+    max-width: 1200px;
 }
 
 /* image fills screen width */
+
 .comic-image {
     width: 100%;
     height: auto;
     display: block;
+    user-select: none;
+    pointer-events: none;
 }
 
-/* improved ripple container */
+/* ============================= */
+/* Hand Ripple */
+/* ============================= */
+
 .hand-ripple {
     position: absolute;
-    top: 48%;
+
+    /* adjust these two values to perfectly match her hand */
+    top: 100%;
     left: 80%;
-    transform: translate(-50%, -50%);
-    width: 90px;
-    height: 90px;
+
+    transform: translate(-25%, -125%);
+    width: 110px;
+    height: 110px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     cursor: pointer;
-    overflow: visible; /* allow ripple to grow outside */
+    overflow: visible;
+    transition: transform 0.2s ease;
 }
 
-/* multiple ripple circles */
+/* hover slight zoom */
+
+.hand-ripple:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* ============================= */
+/* Glow Core (center of palm) */
+/* ============================= */
+
+.ripple-core {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 170, 80, 0.95);
+    border-radius: 50%;
+    box-shadow:
+            0 0 12px rgba(255, 170, 80, 0.9),
+            0 0 25px rgba(255, 120, 50, 0.7),
+            0 0 40px rgba(255, 120, 50, 0.4);
+}
+
+/* ============================= */
+/* Ripple Rings */
+/* ============================= */
+
 .ripple {
     position: absolute;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(52, 152, 255, 1);
-    animation: rippleAnim 1.6s infinite;
+    border: 2px solid rgba(255, 150, 70, 0.8);
+    box-shadow: 0 0 20px rgba(255, 140, 60, 0.7);
+
+    animation: rippleAnim 2.4s infinite ease-out;
 }
 
-.ripple.delay {
+.delay1 {
     animation-delay: 0.8s;
 }
+
+.delay2 {
+    animation-delay: 1.6s;
+}
+
+/* ripple animation */
 
 @keyframes rippleAnim {
     0% {
         transform: scale(0.5);
-        opacity: 0.6;
+        opacity: 0.8;
     }
-    50% {
-        transform: scale(2);
-        opacity: 0.3;
+
+    60% {
+        opacity: 0.4;
     }
+
     100% {
-        transform: scale(3);
+        transform: scale(4);
         opacity: 0;
     }
 }
 
-/* floating login text stays same */
+/* ============================= */
+/* Floating Text */
+/* ============================= */
+
 .login-text {
     position: absolute;
     top: -28px;
-    color: rgba(52, 152, 255);
-    font-weight: bold;
-    font-size: 15px;
+
+    font-family: "Fredoka", "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff8a50;
+
     white-space: nowrap;
-    animation: float 2s infinite ease-in-out;
+
+    text-shadow:
+            0 0 8px rgba(255, 140, 80, 0.8),
+            0 0 16px rgba(255, 120, 50, 0.5);
+
+    animation: floatText 2.6s ease-in-out infinite;
+    pointer-events: none;
 }
 
-/*!* click scaling effect *!*/
-/*.hand-ripple:active {*/
-/*    transform: translate(-50%, -50%) scale(0.95);*/
-/*}*/
-/*@keyframes float {*/
-/*    0% { transform: translateY(0); }*/
-/*    50% { transform: translateY(-6px); }*/
-/*    100% { transform: translateY(0); }*/
-/*}*/
+/* floating animation */
+
+@keyframes floatText {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* hover makes text rise more */
+
+.hand-ripple:hover .login-text {
+    transform: translateY(-10px);
+}
+
+/* ============================= */
+/* Spark Particles */
+/* ============================= */
+
+.spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 180, 90, 0.9);
+    border-radius: 50%;
+    opacity: 0;
+
+    box-shadow: 0 0 8px rgba(255, 180, 90, 0.8);
+
+    animation: sparkFloat 3s infinite ease-in-out;
+}
+
+.spark1 {
+    left: 20%;
+    top: 10%;
+    animation-delay: 0s;
+}
+
+.spark2 {
+    right: 20%;
+    top: 15%;
+    animation-delay: 1s;
+}
+
+.spark3 {
+    bottom: 10%;
+    left: 30%;
+    animation-delay: 2s;
+}
+
+@keyframes sparkFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+/* ============================= */
+/* Responsive positioning */
+/* ============================= */
+
+@media (max-width: 768px) {
+    .hand-ripple {
+        width: 90px;
+        height: 90px;
+        top: 50%;
+        left: 78%;
+    }
+
+    .login-text {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hand-ripple {
+        width: 75px;
+        height: 75px;
+        top: 52%;
+        left: 76%;
+    }
+
+    .login-text {
+        font-size: 13px;
+    }
+}
