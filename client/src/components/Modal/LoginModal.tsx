@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 import api from "../../api/axios";
 import "./modal.css";
 
@@ -30,8 +31,9 @@ export default function LoginModal({ isOpen, onClose }: Props) {
 
       onClose();
       navigate("/home");
-    } catch (err: any) {
-      const msg = err.response?.data?.message || "";
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      const msg = axiosError.response?.data?.message || "";
 
       if (
           msg.includes("duplicate key") ||
@@ -48,7 +50,12 @@ export default function LoginModal({ isOpen, onClose }: Props) {
 
   return (
       <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        <div
+            className="modal-box"
+            onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+                e.stopPropagation()
+            }
+        >
           <button
               className="modal-close"
               onClick={onClose}
