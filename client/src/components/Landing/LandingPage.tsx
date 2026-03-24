@@ -3,9 +3,21 @@ import LoginModal from "../Modal/LoginModal";
 import "./LandingPage.css";
 
 export default function LandingPage() {
-    const [isOpen, setIsOpen] = useState(false);
 
-    const openModal = () => setIsOpen(true);
+    const [isOpen, setIsOpen] = useState(false);
+    const [activate, setActivate] = useState(false);
+
+    const openModal = () => {
+        if (activate) return;
+
+        setActivate(true);
+
+        setTimeout(() => {
+            setIsOpen(true);
+            setActivate(false);
+        }, 400);
+    };
+
     const closeModal = () => setIsOpen(false);
 
     return (
@@ -19,9 +31,8 @@ export default function LandingPage() {
                     alt="Taiwan Student Association Festival Landing"
                 />
 
-                {/* Interactive hand ripple */}
                 <div
-                    className="hand-ripple"
+                    className={`hand-ripple ${activate ? "activate" : ""}`}
                     onClick={openModal}
                     role="button"
                     tabIndex={0}
@@ -32,23 +43,26 @@ export default function LandingPage() {
                         }
                     }}
                 >
-                    {/* glow center */}
+
                     <div className="ripple-core"></div>
 
-                    {/* ripple rings */}
                     <div className="ripple"></div>
                     <div className="ripple delay1"></div>
                     <div className="ripple delay2"></div>
 
-                    {/* floating text */}
                     <div className="login-text">
                         Take my hand!
                     </div>
 
-                    {/* sparkle particles */}
                     <span className="spark spark1"></span>
                     <span className="spark spark2"></span>
                     <span className="spark spark3"></span>
+                    <span className="spark spark4"></span>
+                    <span className="spark spark5"></span>
+                    <span className="spark spark6"></span>
+                    <span className="spark spark7"></span>
+                    <span className="spark spark8"></span>
+
                 </div>
 
             </div>
