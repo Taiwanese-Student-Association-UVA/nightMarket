@@ -42,7 +42,7 @@ export default function LandingPage() {
 
                     {/* floating text */}
                     <div className="login-text">
-                        Follow Me
+                        Take my hand!
                     </div>
 
                     {/* sparkle particles */}
