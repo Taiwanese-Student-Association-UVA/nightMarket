@@ -3,9 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./components/Landing/LandingPage";
 import Home from "./components/Home/Home";
 import ActivityCard from "./components/ActivityCard/ActivityCard";
-import Schedule from "./components/Schedule/Schedule";
-import Map from "./components/Map/Map";
+import Sponsors from "./components/Sponsors/Sponsors";
+import Info from "./components/Info/Info";
 import Menu from "./components/Menu/Menu";
+import Merch from "./components/Merch/Merch";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScanRedirect from "./components/Scan/ScanRedirect";
 
@@ -37,19 +38,19 @@ function App() {
                 />
 
                 <Route
-                    path="/schedule"
+                    path="/info"
                     element={
                         <ProtectedRoute>
-                            <Schedule />
+                            <Info />
                         </ProtectedRoute>
                     }
                 />
 
                 <Route
-                    path="/map"
+                    path="/sponsors"
                     element={
                         <ProtectedRoute>
-                            <Map />
+                            <Sponsors />
                         </ProtectedRoute>
                     }
                 />
@@ -59,6 +60,15 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Menu />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/merch"
+                    element={
+                        <ProtectedRoute>
+                            <Merch />
                         </ProtectedRoute>
                     }
                 />

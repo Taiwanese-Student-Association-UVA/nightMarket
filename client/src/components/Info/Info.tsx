@@ -1,10 +1,10 @@
 import BackButton from "../BackButton";
 
-export default function Map() {
+export default function Info() {
     return (
         <div style={{ padding: 20 }}>
             <BackButton />
-            <h1>Map</h1>
+            <h1>Info</h1>
         </div>
     );
 }

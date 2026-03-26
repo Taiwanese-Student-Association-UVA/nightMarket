@@ -1,93 +1,87 @@
 import { useNavigate } from "react-router-dom";
-import headerImage from "../../assets/home/header.svg";
-import panelsImage from "../../assets/home/panels.svg";
-import wordsImage from "../../assets/home/words.svg";
+import panelsImage from "../../assets/home/panels2.svg";
+
 
 export default function Home() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  return (
-    <div style={{ width: "100vw", background: "white" }}>
-      <div
-        style={{
-          position: "sticky",
-          top: "0vh",
-          zIndex: 20,
-          pointerEvents: "none",
-        }}
-      >
-        <img
-          src={headerImage}
-          alt="Night Market Header"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
-        />
-      </div>
-      <div
-        style={{
-          width: "100%",
-          position: "relative",
-          padding: "0 4vw 4vh",
-          boxSizing: "border-box",
-          marginTop: "-8vh",
-        }}
-      >
-        <img
-          src={panelsImage}
-          alt="Night Market Home"
-          style={{ width: "100%", height: "auto", display: "block" }}
-        />
-        <img
-          src={wordsImage}
-          alt="Panel Labels"
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "87%",
-            height: "auto",
-            pointerEvents: "none",
-          }}
-        />
-        <button
-          aria-label="Activity"
-          onClick={() => navigate("/activity")}
-          style={{ position: "absolute", top: "5%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
-        />
-        <button
-          aria-label="Menu"
-          onClick={() => navigate("/menu")}
-          style={{ position: "absolute", top: "42%", left: "10%", width: "62%", height: "16%", opacity: 0, cursor: "pointer" }}
-        />
-        <button
-          aria-label="Map"
-          onClick={() => navigate("/map")}
-          style={{ position: "absolute", top: "45%", left: "58%", width: "38%", height: "21%", opacity: 0, cursor: "pointer" }}
-        />
-        <button
-          aria-label="Schedule"
-          onClick={() => navigate("/schedule")}
-          style={{ position: "absolute", top: "57%", left: "4%", width: "60%", height: "14%", opacity: 0, cursor: "pointer" }}
-        />
-        <button
-          aria-label="Directions"
-          onClick={() => {
-            window.location.href = "https://maps.app.goo.gl/ZwNFrEBbVZn1Pw1u8";
-          }}
-          style={{ position: "absolute", top: "79%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
-        />
-        <button
-          aria-label="TSA Website"
-          onClick={() => {
-            window.location.href = "https://tsaatuva.org";
-          }}
-          style={{ position: "absolute", top: "90%", left: "4%", width: "92%", height: "9%", opacity: 0, cursor: "pointer" }}
-        />
-      </div>
-    </div>
-  );
+    return (
+        <div style={{ width: "100vw", position: "relative" }}>
+            <svg
+                viewBox="0 0 390 844"
+                width="100%"
+                height="100%"
+                style={{display: "block"}}
+            >
+                {/* Background image as <image> */}
+                <image
+                    href={panelsImage}
+                    x="0"
+                    y="0"
+                    width="390"
+                    height="844"
+                    preserveAspectRatio="xMidYMid meet"
+                />
+
+                {/* Header */}
+                <path
+                    d="M371 239H18V16H370.003L371 239Z"
+                    fill="transparent"
+                    // stroke="red"
+                    strokeWidth={1}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+
+                {/* Activity Card */}
+                <path
+                    d="M17.5 413.683V253.089L262.983 253.089L244 359.036L17.5 413.683Z"
+                    fill="transparent"
+                    // stroke="lightgreen"
+                    strokeWidth={1}
+                    onClick={() => navigate("/activity")}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+
+                {/* Link back to main website merch page */}
+                <path
+                    d="M372.5 253.533H274.277L223.445 550.241L372.5 527.922V253.533Z"
+                    fill="transparent"
+                    // stroke="orange"
+                    strokeWidth={1}
+                    onClick={() => navigate("/merch")}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+
+                {/* Menu */}
+                <path
+                    d="M208.938 555.589L240.199 376.036L17.5 429.036V583.488L208.938 555.589Z"
+                    fill="transparent"
+                    // stroke="green"
+                    strokeWidth={1}
+                    onClick={() => navigate("/menu")}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+
+                {/* Info */}
+                <path
+                    d="M372.5 549.493L19 602.166V666.695L372.5 723.492V549.493Z"
+                    fill="transparent"
+                    // stroke="lightblue"
+                    strokeWidth={1}
+                    onClick={() => navigate("/info")}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+
+                {/* Sponsors */}
+                <path
+                    d="M17.5 683.028L372.5 744.91V823.043H19L17.5 683.028Z"
+                    fill="transparent"
+                    // stroke="blue"
+                    strokeWidth={1}
+                    onClick={() => navigate("/sponsors")}
+                    style={{cursor: "pointer", pointerEvents: "all"}}
+                />
+            </svg>
+        </div>
+    );
 }
