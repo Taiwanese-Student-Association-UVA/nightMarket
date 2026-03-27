@@ -299,8 +299,8 @@ export default function ActivityCard() {
               onClick={() => setInfoPopup(false)}
               style={{
                 position: "absolute",
-                left: "2%",
-                top: "2%",
+                right: "-1%",
+                top: "-3%",
                 background: 'none',
                 color: 'rgb(48, 26, 3)',
                 marginTop: "12px",
