@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import headerSvg from "../../assets/panels/overlay_building_lantern.png";
+import headerSvg from "../../assets/panels/header + overlay.png";
 import activitySvg from "../../assets/panels/game stamps.png";
 import merchSvg from "../../assets/panels/merch.png";
 import menuSvg from "../../assets/panels/menu.png";
@@ -21,7 +21,6 @@ export default function Home() {
     >
 
       
-      {/* side lantern and big lantern
       <img
         src={headerSvg}
         alt="Header"
@@ -35,23 +34,8 @@ export default function Home() {
           pointerEvents: "none",
         }}
       />
-       */}
-
-      {/* overlay building / lantern */}
-      <img
-        src={headerSvg}
-        alt="Header"
-        style={{
-          position: "absolute",
-          left: "4.6%",
-          top: "-19%",
-          width: "97.4%",
-          height: "auto",
-          display: "block",
-          pointerEvents: "none",
-        }}
-      />
       
+
       <img
         src={activitySvg}
         alt="Activity"
@@ -59,7 +43,7 @@ export default function Home() {
         style={{
           position: "absolute",
           left: "4.487%",
-          top: "27.987%",
+          top: "26.987%",
           width: "61.590%",
           height: "auto",
           display: "block",
@@ -75,7 +59,7 @@ export default function Home() {
         style={{
           position: "absolute",
           left: "57.179%",
-          top: "31.540%",
+          top: "29.540%",
           width: "39.231%",
           height: "auto",
           display: "block",
@@ -91,7 +75,7 @@ export default function Home() {
         style={{
           position: "absolute",
           left: "4.487%",
-          top: "45%",
+          top: "43%",
           width: "57.103%",
           height: "auto",
           display: "block",
@@ -107,7 +91,7 @@ export default function Home() {
         style={{
           position: "absolute",
           left: "4.72%",
-          top: "65.56%",
+          top: "63.86%",
           width: "91.538%",
           height: "auto",
           display: "block",
@@ -123,7 +107,7 @@ export default function Home() {
         style={{
           position: "absolute",
           left: "4.487%",
-          top: "81.8%",
+          top: "79.4%",
           width: "92.051%",
           height: "auto",
           display: "block",
