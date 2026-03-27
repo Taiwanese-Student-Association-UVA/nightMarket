@@ -24,9 +24,9 @@ export default function Home() {
         alt="Header"
         style={{
           position: "absolute",
-          left: "4.615%",
-          top: "3%",
-          width: "92.051%",
+          left: "-15.415%",
+          top: "-20%",
+          width: "117%",
           height: "auto",
           display: "block",
           pointerEvents: "none",
