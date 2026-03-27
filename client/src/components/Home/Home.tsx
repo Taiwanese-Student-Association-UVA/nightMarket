@@ -19,8 +19,6 @@ export default function Home() {
         overflow: "hidden",
       }}
     >
-
-      
       {/* side lantern and big lantern
       <img
         src={headerSvg}
@@ -51,7 +49,7 @@ export default function Home() {
           pointerEvents: "none",
         }}
       />
-      
+
       <img
         src={activitySvg}
         alt="Activity"
@@ -86,8 +84,8 @@ export default function Home() {
 
       <img
         src={menuSvg}
-        alt="Menu"
-        onClick={() => navigate("/menu")}
+        alt="Stands"
+        onClick={() => navigate("/stands")}
         style={{
           position: "absolute",
           left: "4.487%",
