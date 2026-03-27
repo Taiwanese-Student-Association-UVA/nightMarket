@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import headerSvg from "../../assets/panels/header.png";
+import headerSvg from "../../assets/panels/header + overlay.png";
 import activitySvg from "../../assets/panels/game stamps.png";
 import merchSvg from "../../assets/panels/merch.png";
 import menuSvg from "../../assets/panels/menu.png";
