@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import type { CSSProperties } from "react";
 
-import headerSvg from "../../assets/panels/header.svg";
-import activitySvg from "../../assets/panels/game stamps.svg";
-import merchSvg from "../../assets/panels/merch.svg";
-import menuSvg from "../../assets/panels/menu.svg";
-import infoSvg from "../../assets/panels/schedule + map.svg";
-import sponsorsSvg from "../../assets/panels/sponsors.svg";
+import headerSvg from "../../assets/panels/header.png";
+import activitySvg from "../../assets/panels/game stamps.png";
+import merchSvg from "../../assets/panels/merch.png";
+import menuSvg from "../../assets/panels/menu.png";
+import infoSvg from "../../assets/panels/schedule + map.png";
+import sponsorsSvg from "../../assets/panels/sponsors.png";
 
 export default function Home() {
   const navigate = useNavigate();
