@@ -150,21 +150,33 @@ export default function ActivityCard() {
           }}
         />
 
-        <img
-          src={infoButton}
-          alt="Back"
+        <div
           onClick={() => setInfoPopup(true)}
-          draggable={false}
           style={{
             position: "absolute",
-            top: "17.25%",
-            right: "31%",
-            width: "3%",
-            height: "auto",
+            top: "12.25%",
+            right: "22.5%",
+            width: "20%",        // bigger hitbox
+            height: "14%",       // bigger hitbox
             zIndex: 20,
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            //outline: 'black 1px solid'
           }}
-        />
+        >
+          <img
+            src={infoButton}
+            alt="info"
+            draggable={false}
+            style={{
+              width: "15%",     // keeps image small inside bigger box
+              height: "auto",
+              pointerEvents: "none", // ensures click goes to parent
+            }}
+          />
+        </div>
 
       </div>
 
