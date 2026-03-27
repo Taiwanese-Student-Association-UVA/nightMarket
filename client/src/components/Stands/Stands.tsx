@@ -417,12 +417,6 @@ export default function Menu() {
     localStorage.setItem("menu-open-sections", JSON.stringify(newState));
   };
 
-  // Calculate total vendors
-  const totalVendors = Object.values(grouped).reduce(
-    (sum, vendors) => sum + vendors.length,
-    0,
-  );
-
   return (
     <>
       <link
@@ -456,7 +450,7 @@ export default function Menu() {
               letterSpacing: "-0.02em",
             }}
           >
-            Our Vendors
+            Our Stands
           </h1>
           <div
             style={{
@@ -474,52 +468,10 @@ export default function Menu() {
                 lineHeight: 1.5,
               }}
             >
-              Supporting student vendors — tap a stall to learn more!
+              Supporting student vendors, cultural CIOs, local organizations,
+              and more — tap a stall to learn about each stand!
             </p>
-            {!loading && Object.keys(grouped).length > 0 && (
-              <button
-                onClick={() => {
-                  const allOpen = Object.values(openSections).every(Boolean);
-                  const newState: Record<string, boolean> = {};
-                  Object.keys(grouped).forEach((genre) => {
-                    newState[genre] = !allOpen;
-                  });
-                  setOpenSections(newState);
-                  localStorage.setItem(
-                    "menu-open-sections",
-                    JSON.stringify(newState),
-                  );
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                  color: "#b28b6f",
-                  cursor: "pointer",
-                  padding: "4px 8px",
-                  fontWeight: 500,
-                }}
-              >
-                {Object.values(openSections).every(Boolean)
-                  ? "Collapse all"
-                  : "Expand all"}
-              </button>
-            )}
           </div>
-          {!loading && (
-            <p
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                color: "#b8a088",
-                margin: "8px 0 0",
-              }}
-            >
-              {totalVendors} vendor{totalVendors !== 1 ? "s" : ""} across{" "}
-              {Object.keys(grouped).length} categories
-            </p>
-          )}
         </div>
 
         {/* accordion list */}
