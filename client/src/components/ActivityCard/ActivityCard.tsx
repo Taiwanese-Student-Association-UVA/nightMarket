@@ -276,6 +276,7 @@ export default function ActivityCard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
+              position: 'relative',
               backgroundColor: "rgba(248, 244, 227, 0.9)",
               padding: "24px",
               borderRadius: "16px",
@@ -297,8 +298,8 @@ export default function ActivityCard() {
               onClick={() => setInfoPopup(false)}
               style={{
                 position: "absolute",
-                left: "11%",
-                top: "29%",
+                left: "2%",
+                top: "2%",
                 background: 'none',
                 color: 'rgb(48, 26, 3)',
                 marginTop: "12px",
