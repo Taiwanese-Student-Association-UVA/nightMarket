@@ -1,87 +1,117 @@
 import { useNavigate } from "react-router-dom";
-import panelsImage from "../../assets/home/panels2.svg";
 
+import headerSvg from "../../assets/panels/header.svg";
+import activitySvg from "../../assets/panels/game stamps.svg";
+import merchSvg from "../../assets/panels/merch.svg";
+import menuSvg from "../../assets/panels/menu.svg";
+import infoSvg from "../../assets/panels/schedule + map.svg";
+import sponsorsSvg from "../../assets/panels/sponsors.svg";
 
 export default function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <div style={{ width: "100vw", position: "relative" }}>
-            <svg
-                viewBox="0 0 390 844"
-                width="100%"
-                height="100%"
-                style={{display: "block"}}
-            >
-                {/* Background image as <image> */}
-                <image
-                    href={panelsImage}
-                    x="0"
-                    y="0"
-                    width="390"
-                    height="844"
-                    preserveAspectRatio="xMidYMid meet"
-                />
+  return (
+    <div
+      style={{
+        width: "100vw",
+        position: "relative",
+        aspectRatio: "390 / 844",
+        overflow: "hidden",
+      }}
+    >
+      <img
+        src={headerSvg}
+        alt="Header"
+        style={{
+          position: "absolute",
+          left: "4.615%",
+          top: "3%",
+          width: "92.051%",
+          height: "auto",
+          display: "block",
+          pointerEvents: "none",
+        }}
+      />
 
-                {/* Header */}
-                <path
-                    d="M371 239H18V16H370.003L371 239Z"
-                    fill="transparent"
-                    // stroke="red"
-                    strokeWidth={1}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
+      <img
+        src={activitySvg}
+        alt="Activity"
+        onClick={() => navigate("/activity")}
+        style={{
+          position: "absolute",
+          left: "4.487%",
+          top: "26.987%",
+          width: "61.590%",
+          height: "auto",
+          display: "block",
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
 
-                {/* Activity Card */}
-                <path
-                    d="M17.5 413.683V253.089L262.983 253.089L244 359.036L17.5 413.683Z"
-                    fill="transparent"
-                    // stroke="lightgreen"
-                    strokeWidth={1}
-                    onClick={() => navigate("/activity")}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
+      <img
+        src={merchSvg}
+        alt="Merch"
+        onClick={() => navigate("/merch")}
+        style={{
+          position: "absolute",
+          left: "57.179%",
+          top: "29.540%",
+          width: "39.231%",
+          height: "auto",
+          display: "block",
+          cursor: "pointer",
+          zIndex: 3,
+        }}
+      />
 
-                {/* Link back to main website merch page */}
-                <path
-                    d="M372.5 253.533H274.277L223.445 550.241L372.5 527.922V253.533Z"
-                    fill="transparent"
-                    // stroke="orange"
-                    strokeWidth={1}
-                    onClick={() => navigate("/merch")}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
+      <img
+        src={menuSvg}
+        alt="Menu"
+        onClick={() => navigate("/menu")}
+        style={{
+          position: "absolute",
+          left: "4.487%",
+          top: "43%",
+          width: "57.103%",
+          height: "auto",
+          display: "block",
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
 
-                {/* Menu */}
-                <path
-                    d="M208.938 555.589L240.199 376.036L17.5 429.036V583.488L208.938 555.589Z"
-                    fill="transparent"
-                    // stroke="green"
-                    strokeWidth={1}
-                    onClick={() => navigate("/menu")}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
+      <img
+        src={infoSvg}
+        alt="Info"
+        onClick={() => navigate("/info")}
+        style={{
+          position: "absolute",
+          left: "4.72%",
+          top: "63.86%",
+          width: "91.538%",
+          height: "auto",
+          display: "block",
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
 
-                {/* Info */}
-                <path
-                    d="M372.5 549.493L19 602.166V666.695L372.5 723.492V549.493Z"
-                    fill="transparent"
-                    // stroke="lightblue"
-                    strokeWidth={1}
-                    onClick={() => navigate("/info")}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
-
-                {/* Sponsors */}
-                <path
-                    d="M17.5 683.028L372.5 744.91V823.043H19L17.5 683.028Z"
-                    fill="transparent"
-                    // stroke="blue"
-                    strokeWidth={1}
-                    onClick={() => navigate("/sponsors")}
-                    style={{cursor: "pointer", pointerEvents: "all"}}
-                />
-            </svg>
-        </div>
-    );
+      <img
+        src={sponsorsSvg}
+        alt="Sponsors"
+        onClick={() => navigate("/sponsors")}
+        style={{
+          position: "absolute",
+          left: "4.487%",
+          top: "79.4%",
+          width: "92.051%",
+          height: "auto",
+          display: "block",
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
+    </div>
+  );
 }
