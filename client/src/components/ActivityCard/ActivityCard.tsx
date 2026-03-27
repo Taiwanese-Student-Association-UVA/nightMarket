@@ -296,6 +296,9 @@ export default function ActivityCard() {
             <button
               onClick={() => setInfoPopup(false)}
               style={{
+                position: "absolute",
+                left: "11%",
+                top: "29%",
                 background: 'none',
                 color: 'rgb(48, 26, 3)',
                 marginTop: "12px",
@@ -303,10 +306,11 @@ export default function ActivityCard() {
                 border: "none",
                 borderRadius: "10px",
                 cursor: "pointer",
-                fontSize: "16px",
+                fontSize: "13px",
+                //outline: '2px solid red'
               }}
             >
-              Close
+              x
             </button>
           </div>
         </div>
