@@ -292,7 +292,7 @@ export default function ActivityCard() {
                 Collect 5 stamps to receive 1 reward, or collect all 10 stamps to earn 2 rewards.
                 Once you have enough stamps, head to the prize booth to claim your reward.
             </p>
-            <p  style={{marginTop: '6%', marginBottom: "5%"}}>
+            <p  style={{marginTop: '6%', marginBottom: "7%"}}>
                               Not sure where to go? Use the Map on the home page to find your way.
             </p>
             <button
