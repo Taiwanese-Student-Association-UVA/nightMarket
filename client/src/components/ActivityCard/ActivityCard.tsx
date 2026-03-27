@@ -4,6 +4,7 @@ import api from "../../api/axios";
 import stampCard from "../../assets/activity/stampCard.svg";
 import singleStamp from "../../assets/activity/singleStamp.png";
 import backStamp from "../../assets/activity/back-button.png";
+import infoButton from "../../assets/activity/information-button.png";
 import claimButton from "../../assets/activity/claim-button.svg";
 import background from "../../assets/BG.png";
 import lantern from "../../assets/activity/lantern.png";
@@ -140,14 +141,31 @@ export default function ActivityCard() {
           style={{
             position: "absolute",
             top: "15%",
-            right: "10%",
+            right: "8%",
             width: "12%",
             height: "auto",
             zIndex: 20,
             cursor: "pointer",
           }}
         />
+                <img
+          src={infoButton}
+          alt="Back"
+          onClick={() => setShowPopup(true)}
+          draggable={false}
+          style={{
+            position: "absolute",
+            top: "15.5%",
+            left: "10%",
+            width: "6%",
+            height: "auto",
+            zIndex: 20,
+            cursor: "pointer",
+          }}
+        />
+
       </div>
+      
 
       <div
         style={{
@@ -191,7 +209,8 @@ export default function ActivityCard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "white",
+              backgroundColor: "rgb(203, 198, 198)",
+              opacity: .9,
               padding: "24px",
               borderRadius: "16px",
               width: "80%",
