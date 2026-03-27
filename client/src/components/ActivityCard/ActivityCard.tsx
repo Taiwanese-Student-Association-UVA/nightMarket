@@ -235,7 +235,7 @@ export default function ActivityCard() {
           >
             <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
             <p>
-              You have {rewardsAvailable} redeemable reward
+              You have {rewardsAvailable + 1} redeemable reward
               {rewardsAvailable !== 1 ? "s" : ""}.
             </p>
             <button

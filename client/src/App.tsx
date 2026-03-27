@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import api from "./api/axios";
 
 import LandingPage from "./components/Landing/LandingPage";
 import Home from "./components/Home/Home";
@@ -10,6 +12,32 @@ import Merch from "./components/Merch/Merch";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScanRedirect from "./components/Scan/ScanRedirect";
 
+// --- Inline TestScanPage (seamless version) ---
+function TestScanPage() {
+    const { stallId } = useParams<{ stallId: string }>();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!stallId) return;
+
+        const simulateScan = async () => {
+            try {
+                await api.post("/scan", { stallId: Number(stallId) });
+            } catch {
+                // ignore any errors
+            } finally {
+                navigate("/activity"); // redirect back to activity page
+            }
+        };
+
+        simulateScan();
+    }, [stallId, navigate]);
+
+    // Render nothing to make it seamless
+    return null;
+}
+
+// --- App Component ---
 function App() {
     return (
         <BrowserRouter>
@@ -78,6 +106,16 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <ScanRedirect />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* NEW: Test scan route */}
+                <Route
+                    path="/activity/:stallId"
+                    element={
+                        <ProtectedRoute>
+                            <TestScanPage />
                         </ProtectedRoute>
                     }
                 />
