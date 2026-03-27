@@ -469,7 +469,7 @@ export default function Menu() {
               }}
             >
               Supporting student vendors, cultural CIOs, local organizations,
-              and more — tap a stall to learn about each stand!
+              and more - tap a stall to learn about each stand!
             </p>
           </div>
         </div>
