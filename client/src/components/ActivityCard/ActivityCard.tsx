@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import stampCard from "../../assets/activity/stampCard.svg";
+import stampCard from "../../assets/activity/stampCard.png";
 import singleStamp from "../../assets/activity/singleStamp.png";
 import backStamp from "../../assets/activity/back-button.png";
 import claimButton from "../../assets/activity/claim-button.svg";
@@ -141,9 +141,9 @@ export default function ActivityCard() {
           draggable={false}
           style={{
             position: "absolute",
-            top: "15%",
-            right: "10%",
-            width: "12%",
+            top: "-5%",
+            left: "6.5%",
+            width: "18%",
             height: "auto",
             zIndex: 20,
             cursor: "pointer",
@@ -157,9 +157,9 @@ export default function ActivityCard() {
           draggable={false}
           style={{
             position: "absolute",
-            top: "15%",
-            left: "10%",
-            width: "7%",
+            top: "17.25%",
+            right: "31%",
+            width: "3%",
             height: "auto",
             zIndex: 20,
             cursor: "pointer",
