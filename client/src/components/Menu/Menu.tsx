@@ -200,7 +200,7 @@ export default function Menu() {
     return (
         <div style={{ padding: 20 }}>
             <BackButton />
-            <h1>Map</h1>
+            <h1>Menu</h1>
         </div>
     );
 }
