@@ -4,8 +4,8 @@ import api from "../../api/axios";
 import stampCard from "../../assets/activity/stampCard.svg";
 import singleStamp from "../../assets/activity/singleStamp.png";
 import backStamp from "../../assets/activity/back-button.png";
-import infoButton from "../../assets/activity/information-button.png";
 import claimButton from "../../assets/activity/claim-button.svg";
+import infoButton from "../../assets/activity/information-button.png";
 import background from "../../assets/BG.png";
 import lantern from "../../assets/activity/lantern.png";
 
@@ -17,6 +17,7 @@ export default function ActivityCard() {
   const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [infoPopup, setInfoPopup] = useState(0);
   const [isClaiming, setIsClaiming] = useState(false);
 
   const fetchUser = async () => {
@@ -141,23 +142,24 @@ export default function ActivityCard() {
           style={{
             position: "absolute",
             top: "15%",
-            right: "8%",
+            right: "10%",
             width: "12%",
             height: "auto",
             zIndex: 20,
             cursor: "pointer",
           }}
         />
-                <img
+
+        <img
           src={infoButton}
           alt="Back"
-          onClick={() => setShowPopup(true)}
+          onClick={() => setInfoPopup}
           draggable={false}
           style={{
             position: "absolute",
-            top: "15.5%",
+            top: "15%",
             left: "10%",
-            width: "6%",
+            width: "7%",
             height: "auto",
             zIndex: 20,
             cursor: "pointer",
@@ -165,7 +167,6 @@ export default function ActivityCard() {
         />
 
       </div>
-      
 
       <div
         style={{
@@ -209,8 +210,7 @@ export default function ActivityCard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "rgb(203, 198, 198)",
-              opacity: .9,
+              backgroundColor: "white",
               padding: "24px",
               borderRadius: "16px",
               width: "80%",
@@ -240,6 +240,61 @@ export default function ActivityCard() {
           </div>
         </div>
       )}
+
+
+
+      {infoPopup && (
+        <div
+          onClick={() => setShowPopup(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "white",
+              padding: "24px",
+              borderRadius: "16px",
+              width: "80%",
+              maxWidth: "320px",
+              textAlign: "center",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
+            <p>
+              You have {rewardsAvailable} redeemable reward
+              {rewardsAvailable !== 1 ? "s" : ""}.
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              style={{
+                marginTop: "12px",
+                padding: "10px 18px",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+
     </div>
+    
   );
 }
