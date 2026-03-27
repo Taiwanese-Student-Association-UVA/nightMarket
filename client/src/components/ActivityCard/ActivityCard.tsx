@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import stampCard from "../../assets/stampCard.svg";
-import singleStamp from "../../assets/singleStamp.svg";
-import backStamp from "../../assets/back-button.png";
-import claimButton from "../../assets/claim-button.svg";
+import stampCard from "../../assets/activity/stampCard.svg";
+import singleStamp from "../../assets/activity/singleStamp.png";
+import backStamp from "../../assets/activity/back-button.png";
+import claimButton from "../../assets/activity/claim-button.svg";
 import background from "../../assets/BG.png";
-import lantern from "../../assets/lantern.png";
+import lantern from "../../assets/activity/lantern.png";
 
 export default function ActivityCard() {
   const navigate = useNavigate();
@@ -163,9 +163,9 @@ export default function ActivityCard() {
           alt="Claim Reward"
           onClick={rewardsAvailable > 0 && !isClaiming ? handleClaimClick : undefined}
           style={{
-            width: "clamp(120px, 40vw, 500px)",
+            width: "50%",
             height: "auto",
-            display: "block",
+            display: "absolute",
             cursor: rewardsAvailable > 0 && !isClaiming ? "pointer" : "not-allowed",
             opacity: rewardsAvailable > 0 ? 1 : 0.5,
           }}
