@@ -9,6 +9,7 @@ interface Vendor {
   sub: string;
   sub2: string;
   img: string;
+  genre: string;
 }
 
 // ── data fetching ──────────────────────────────────────────────────────────
@@ -30,7 +31,15 @@ function useVendors(csvUrl: string) {
     });
   }, [csvUrl]);
 
-  return { vendors, loading };
+  // group vendors by genre, preserving first-seen order and filtering out empty
+  const grouped = vendors.reduce<Record<string, Vendor[]>>((acc, v) => {
+    const key = v.genre?.trim() || "Other";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(v);
+    return acc;
+  }, {});
+
+  return { grouped, loading };
 }
 
 // ── modal ──────────────────────────────────────────────────────────────────
@@ -41,7 +50,6 @@ function VendorModal({
   vendor: Vendor;
   onClose: () => void;
 }) {
-  // lock scroll while open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -53,8 +61,8 @@ function VendorModal({
     <>
       <style>{`
         @keyframes modalIn {
-          from { opacity: 0; transform: translateY(32px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0)     scale(1);    }
+          from { opacity: 0; transform: translateY(40px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0)    scale(1);    }
         }
       `}</style>
 
@@ -71,7 +79,7 @@ function VendorModal({
         }}
       />
 
-      {/* card */}
+      {/* sheet */}
       <div
         style={{
           position: "fixed",
@@ -95,7 +103,6 @@ function VendorModal({
             overflowY: "auto",
           }}
         >
-          {/* image */}
           {vendor.img && (
             <div
               style={{
@@ -114,7 +121,6 @@ function VendorModal({
           )}
 
           <div style={{ padding: "20px 24px 0" }}>
-            {/* stall name */}
             <h2
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
@@ -128,7 +134,6 @@ function VendorModal({
               {vendor.stall}
             </h2>
 
-            {/* description */}
             {vendor.description && (
               <p
                 style={{
@@ -143,7 +148,6 @@ function VendorModal({
               </p>
             )}
 
-            {/* sub tags */}
             <div
               style={{
                 display: "flex",
@@ -184,7 +188,6 @@ function VendorModal({
               )}
             </div>
 
-            {/* close button */}
             <button
               onClick={onClose}
               style={{
@@ -238,7 +241,6 @@ function VendorCard({
           : "0 2px 12px rgba(0,0,0,0.08)",
       }}
     >
-      {/* image */}
       <div style={{ width: "100%", aspectRatio: "1 / 1", overflow: "hidden" }}>
         {vendor.img ? (
           <img
@@ -253,8 +255,7 @@ function VendorCard({
         )}
       </div>
 
-      {/* name */}
-      <div style={{ padding: "10px 12px 2px", textAlign: "center" }}>
+      <div style={{ padding: "10px 12px 12px", textAlign: "center" }}>
         <p
           style={{
             margin: 0,
@@ -272,14 +273,158 @@ function VendorCard({
   );
 }
 
-// ── page ───────────────────────────────────────────────────────────────────
-export default function Vendors() {
-  const { vendors, loading } = useVendors(SHEET_CSV_URL);
-  const [selected, setSelected] = useState<Vendor | null>(null);
+// ── accordion section ──────────────────────────────────────────────────────
+function GenreSection({
+  genre,
+  vendors,
+  onSelect,
+  isOpen: initialIsOpen = false,
+  onToggle,
+}: {
+  genre: string;
+  vendors: Vendor[];
+  onSelect: (v: Vendor) => void;
+  isOpen?: boolean;
+  onToggle?: (genre: string, isOpen: boolean) => void;
+}) {
+  const [open, setOpen] = useState(initialIsOpen);
+
+  const handleToggle = () => {
+    const newState = !open;
+    setOpen(newState);
+    onToggle?.(genre, newState);
+  };
 
   return (
     <>
-      {/* Google Fonts */}
+      <style>{`
+        @keyframes gridReveal {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div
+        style={{
+          marginBottom: 2,
+          borderBottom: "1px solid #e8ddd4",
+        }}
+      >
+        {/* accordion header */}
+        <button
+          onClick={handleToggle}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "16px 20px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            textAlign: "left",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: 20,
+                fontWeight: 700,
+                color: "#2a2018",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {genre}
+            </span>
+            <span
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                color: "#a89080",
+                background: "#f0e8e0",
+                borderRadius: 20,
+                padding: "2px 10px",
+                fontWeight: 500,
+              }}
+            >
+              {vendors.length}
+            </span>
+          </div>
+
+          {/* chevron */}
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#a89080"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{
+              flexShrink: 0,
+              transform: open ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 0.25s ease",
+            }}
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+        {/* collapsible grid */}
+        <div
+          style={{
+            display: open ? "grid" : "none",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 12,
+            padding: "0 20px 20px",
+            animation: open ? "gridReveal 0.25s ease both" : "none",
+          }}
+        >
+          {vendors.map((v, i) => (
+            <VendorCard key={i} vendor={v} onClick={() => onSelect(v)} />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── page ───────────────────────────────────────────────────────────────────
+export default function Menu() {
+  const { grouped, loading } = useVendors(SHEET_CSV_URL);
+  const [selected, setSelected] = useState<Vendor | null>(null);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+  // Load saved state from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("menu-open-sections");
+    if (saved) {
+      try {
+        setOpenSections(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load saved state", e);
+      }
+    }
+  }, []);
+
+  // Save state to localStorage
+  const handleToggle = (genre: string, isOpen: boolean) => {
+    const newState = { ...openSections, [genre]: isOpen };
+    setOpenSections(newState);
+    localStorage.setItem("menu-open-sections", JSON.stringify(newState));
+  };
+
+  // Calculate total vendors
+  const totalVendors = Object.values(grouped).reduce(
+    (sum, vendors) => sum + vendors.length,
+    0,
+  );
+
+  return (
+    <>
       <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
         rel="stylesheet"
@@ -289,7 +434,7 @@ export default function Vendors() {
         style={{
           minHeight: "100dvh",
           background: "#fffaf8",
-          padding: "0 0 40px",
+          paddingBottom: 40,
           maxWidth: 480,
           margin: "0 auto",
         }}
@@ -299,7 +444,7 @@ export default function Vendors() {
           <BackButton />
         </div>
 
-        <div style={{ padding: "12px 20px 0" }}>
+        <div style={{ padding: "12px 20px 20px" }}>
           <h1
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
@@ -313,20 +458,71 @@ export default function Vendors() {
           >
             Our Vendors
           </h1>
-          <p
+          <div
             style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              color: "#8a7060",
-              margin: "0 0 24px",
-              lineHeight: 1.5,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
             }}
           >
-            Supporting student vendors — tap a stall to learn more!
-          </p>
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14,
+                color: "#8a7060",
+                margin: 0,
+                lineHeight: 1.5,
+              }}
+            >
+              Supporting student vendors — tap a stall to learn more!
+            </p>
+            {!loading && Object.keys(grouped).length > 0 && (
+              <button
+                onClick={() => {
+                  const allOpen = Object.values(openSections).every(Boolean);
+                  const newState: Record<string, boolean> = {};
+                  Object.keys(grouped).forEach((genre) => {
+                    newState[genre] = !allOpen;
+                  });
+                  setOpenSections(newState);
+                  localStorage.setItem(
+                    "menu-open-sections",
+                    JSON.stringify(newState),
+                  );
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: 12,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "#b28b6f",
+                  cursor: "pointer",
+                  padding: "4px 8px",
+                  fontWeight: 500,
+                }}
+              >
+                {Object.values(openSections).every(Boolean)
+                  ? "Collapse all"
+                  : "Expand all"}
+              </button>
+            )}
+          </div>
+          {!loading && (
+            <p
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12,
+                color: "#b8a088",
+                margin: "8px 0 0",
+              }}
+            >
+              {totalVendors} vendor{totalVendors !== 1 ? "s" : ""} across{" "}
+              {Object.keys(grouped).length} categories
+            </p>
+          )}
         </div>
 
-        {/* grid */}
+        {/* accordion list */}
         {loading ? (
           <div
             style={{
@@ -341,22 +537,21 @@ export default function Vendors() {
             Loading vendors…
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 12,
-              padding: "0 20px",
-            }}
-          >
-            {vendors.map((v, i) => (
-              <VendorCard key={i} vendor={v} onClick={() => setSelected(v)} />
+          <div>
+            {Object.entries(grouped).map(([genre, vendors]) => (
+              <GenreSection
+                key={genre}
+                genre={genre}
+                vendors={vendors}
+                onSelect={setSelected}
+                isOpen={openSections[genre] ?? false}
+                onToggle={handleToggle}
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* modal */}
       {selected && (
         <VendorModal vendor={selected} onClose={() => setSelected(null)} />
       )}
