@@ -17,7 +17,7 @@ export default function ActivityCard() {
   const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [infoPopup, setInfoPopup] = useState(0);
+  const [infoPopup, setInfoPopup] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
 
   const fetchUser = async () => {
@@ -153,7 +153,7 @@ export default function ActivityCard() {
         <img
           src={infoButton}
           alt="Back"
-          onClick={() => setInfoPopup}
+          onClick={() => setInfoPopup(true)}
           draggable={false}
           style={{
             position: "absolute",
@@ -191,6 +191,8 @@ export default function ActivityCard() {
         />
       </div>
 
+
+      {/* claim POPUP */}
       {showPopup && (
         <div
           onClick={() => setShowPopup(false)}
@@ -242,10 +244,10 @@ export default function ActivityCard() {
       )}
 
 
-
+      {/* INFO POPUP */}
       {infoPopup && (
         <div
-          onClick={() => setShowPopup(false)}
+          onClick={() => setInfoPopup(false)}
           style={{
             position: "fixed",
             top: 0,
@@ -262,23 +264,26 @@ export default function ActivityCard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "white",
+              backgroundColor: "rgba(248, 244, 227, 0.9)",
               padding: "24px",
               borderRadius: "16px",
               width: "80%",
-              maxWidth: "320px",
               textAlign: "center",
               boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
-            <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
-            <p>
-              You have {rewardsAvailable} redeemable reward
-              {rewardsAvailable !== 1 ? "s" : ""}.
+            <h2 style={{ marginTop: '1%', marginBottom: '2%', color: 'rgb(48, 26, 3)' }}>Instructions</h2>
+            <p style={{ color: 'rgb(48, 26, 3)'}}>
+                Visit stalls and play games to earn stamps!
+                Collect 5 stamps to receive 1 reward, or collect all 10 stamps to earn 2 rewards.
+                Once you have enough stamps, head to the prize booth to claim your reward.
+                Not sure where to go? Use the Map on the home page to find your way.
             </p>
             <button
-              onClick={() => setShowPopup(false)}
+              onClick={() => setInfoPopup(false)}
               style={{
+                background: 'none',
+                color: 'rgb(48, 26, 3)',
                 marginTop: "12px",
                 padding: "10px 18px",
                 border: "none",
