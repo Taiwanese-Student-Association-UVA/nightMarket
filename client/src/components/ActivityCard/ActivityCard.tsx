@@ -154,10 +154,10 @@ export default function ActivityCard() {
           onClick={() => setInfoPopup(true)}
           style={{
             position: "absolute",
-            top: "12.25%",
+            top: "9.25%",
             right: "22.5%",
             width: "20%",        // bigger hitbox
-            height: "14%",       // bigger hitbox
+            height: "20%",       // bigger hitbox
             zIndex: 20,
             cursor: "pointer",
             display: "flex",
