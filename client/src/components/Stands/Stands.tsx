@@ -20,16 +20,22 @@ function useVendors(csvUrl: string) {
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      complete: (result: Papa.ParseResult<Vendor>) => {
-        setVendors(result.data as Vendor[]);
-        setLoading(false);
-      },
-    });
-  }, [csvUrl]);
+    useEffect(() => {
+        let cancelled = false;
+
+        const fetchData = async () => {
+            const result = await new Promise<Papa.ParseResult<Vendor>>((resolve) => {
+                Papa.parse(csvUrl, { download: true, header: true, complete: resolve });
+            });
+            if (!cancelled) {
+                setVendors(result.data as Vendor[]);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+        return () => { cancelled = true; };
+    }, [csvUrl]);
 
   // group vendors by genre, preserving first-seen order and filtering out empty
   const grouped = vendors.reduce<Record<string, Vendor[]>>((acc, v) => {
