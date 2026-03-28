@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import stampCard from "../../assets/activity/stampCard.png";
@@ -12,7 +12,6 @@ import lantern from "../../assets/activity/lantern.png";
 export default function ActivityCard() {
   const navigate = useNavigate();
 
-  // 5 points = 1 reward
   const POINTS_PER_REWARD = 50;
 
   const [points, setPoints] = useState(0);
@@ -25,15 +24,15 @@ export default function ActivityCard() {
     "none" | "ready" | "goToBooth" | "claimed"
   >("none");
 
-  const prevRewardsAvailable = useRef(0);
-
   const fetchUser = async () => {
     try {
       const res = await api.get("/me");
 
       const pts = Number(res.data?.points || 0);
+
+      // ✅ ensure no duplicates
       const stalls = Array.isArray(res.data?.scannedStalls)
-        ? res.data.scannedStalls.map(Number)
+        ? [...new Set(res.data.scannedStalls.map(Number))]
         : [];
 
       setPoints(pts);
@@ -47,17 +46,17 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  const rewardsAvailable = Math.floor(points / POINTS_PER_REWARD);
-
+  // 🔥 SIMPLE + CORRECT LOGIC
   useEffect(() => {
-    // auto-show popup whenever a new reward becomes available
-    if (rewardsAvailable > prevRewardsAvailable.current) {
+    const count = new Set(scannedStalls).size;
+
+    if (count === 5 || count === 10) {
       setRewardStage("ready");
       setShowPopup(true);
     }
+  }, [scannedStalls]);
 
-    prevRewardsAvailable.current = rewardsAvailable;
-  }, [rewardsAvailable]);
+  const rewardsAvailable = Math.floor(points / POINTS_PER_REWARD);
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -89,7 +88,9 @@ export default function ActivityCard() {
       setRewardStage("claimed");
       setShowPopup(true);
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      const msg = (err as {
+        response?: { data?: { message?: string } };
+      })?.response?.data?.message;
       alert(msg || "Failed to claim reward");
     } finally {
       setIsClaiming(false);
@@ -220,18 +221,24 @@ export default function ActivityCard() {
         <img
           src={claimButton}
           alt="Claim Reward"
-          onClick={rewardsAvailable > 0 && !isClaiming ? handleClaimClick : undefined}
+          onClick={
+            rewardsAvailable > 0 && !isClaiming
+              ? handleClaimClick
+              : undefined
+          }
           style={{
             width: "50%",
             height: "auto",
             display: "block",
-            cursor: rewardsAvailable > 0 && !isClaiming ? "pointer" : "not-allowed",
+            cursor:
+              rewardsAvailable > 0 && !isClaiming
+                ? "pointer"
+                : "not-allowed",
             opacity: rewardsAvailable > 0 ? 1 : 0.5,
           }}
         />
       </div>
 
-      {/* CLAIM / REWARD POPUP */}
       {showPopup && (
         <div
           onClick={closePopup}
@@ -264,14 +271,17 @@ export default function ActivityCard() {
               <>
                 <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
                 <p>
-                  You have earned a reward. Tap Claim Reward to
-                  continue.
+                  You have unlocked{" "}
+                  <strong>
+                    {scannedStalls.length >= 10 ? " another reward" : "a reward"}
+                  </strong>.
+                  Head to the prize booth whenever you’re ready to claim.
                 </p>
                 <button
                   onClick={closePopup}
                   style={{
-                    background: 'none',
-                    fontWeight: 'bold',
+                    background: "none",
+                    fontWeight: "bold",
                     marginTop: "12px",
                     padding: "10px 18px",
                     border: "none",
@@ -293,7 +303,6 @@ export default function ActivityCard() {
                   onClick={handleFinalClaim}
                   disabled={isClaiming}
                   style={{
-                    
                     background: "none",
                     marginTop: "12px",
                     padding: "10px 18px",
@@ -334,7 +343,6 @@ export default function ActivityCard() {
         </div>
       )}
 
-      {/* INFO POPUP */}
       {infoPopup && (
         <div
           onClick={() => setInfoPopup(false)}
@@ -363,24 +371,10 @@ export default function ActivityCard() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
-            <h2
-              style={{
-                marginTop: "1%",
-                marginBottom: "2%",
-                color: "rgb(48, 26, 3)",
-              }}
-            >
-              Instructions
-            </h2>
-            <p style={{ color: "rgb(48, 26, 3)" }}>
+            <h2 style={{ marginTop: "1%" }}>Instructions</h2>
+            <p>
               Visit stalls and play games to earn stamps. Collect 5 stamps to
               unlock 1 reward, or collect all 10 stamps to unlock 2 rewards.
-              Once you have enough stamps, tap Claim Reward and head to the
-              prize booth.
-            </p>
-            <p style={{ marginTop: "6%", marginBottom: "7%", color: "rgb(48, 26, 3)"  }}>
-              Not sure where to go? Use the Map on the home page to find your
-              way.
             </p>
             <button
               onClick={() => setInfoPopup(false)}
@@ -389,13 +383,7 @@ export default function ActivityCard() {
                 right: "-1%",
                 top: "-3%",
                 background: "none",
-                color: "rgb(48, 26, 3)",
-                marginTop: "12px",
-                padding: "10px 18px",
-                border: "none",
-                borderRadius: "10px",
                 cursor: "pointer",
-                fontSize: "13px",
               }}
             >
               x
