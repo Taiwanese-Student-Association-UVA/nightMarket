@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import stampCard from "../../assets/activity/stampCard.png";
@@ -12,26 +12,21 @@ import lantern from "../../assets/activity/lantern.png";
 export default function ActivityCard() {
   const navigate = useNavigate();
 
-  // 5 points = 1 reward
   const POINTS_PER_REWARD = 50;
+  const POINTS_PER_STAMP = 10;
 
   const [points, setPoints] = useState(0);
   const [scannedStalls, setScannedStalls] = useState<number[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [infoPopup, setInfoPopup] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-
-  const [rewardStage, setRewardStage] = useState<
-    "none" | "ready" | "goToBooth" | "claimed"
-  >("none");
-
-  const prevRewardsAvailable = useRef(0);
+  const [shownMilestones, setShownMilestones] = useState<number[]>([]);
 
   const fetchUser = async () => {
     try {
       const res = await api.get("/me");
 
-      const pts = Number(res.data?.points || 0);
+      const pts = res.data?.points || 0;
       const stalls = Array.isArray(res.data?.scannedStalls)
         ? res.data.scannedStalls.map(Number)
         : [];
@@ -47,17 +42,25 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  const rewardsAvailable = Math.floor(points / POINTS_PER_REWARD);
+  const stampCount = scannedStalls.length;
+
+  // use corresponding stamp values:
+  // 5 stamps = 50 points = 1 reward
+  // 10 stamps = 100 points = 2 rewards
+  const virtualPoints = stampCount * POINTS_PER_STAMP;
+  const rewardsAvailable = Math.floor(virtualPoints / POINTS_PER_REWARD);
 
   useEffect(() => {
-    // auto-show popup whenever a new reward becomes available
-    if (rewardsAvailable > prevRewardsAvailable.current) {
-      setRewardStage("ready");
+    if (stampCount === 5 && !shownMilestones.includes(5)) {
       setShowPopup(true);
+      setShownMilestones((prev) => [...prev, 5]);
     }
 
-    prevRewardsAvailable.current = rewardsAvailable;
-  }, [rewardsAvailable]);
+    if (stampCount === 10 && !shownMilestones.includes(10)) {
+      setShowPopup(true);
+      setShownMilestones((prev) => [...prev, 10]);
+    }
+  }, [stampCount, shownMilestones]);
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -72,33 +75,19 @@ export default function ActivityCard() {
     { id: 10, top: "70%", left: "84.5%", rotate: 2 },
   ];
 
-  const handleClaimClick = () => {
+  const handleClaimClick = async () => {
     if (rewardsAvailable < 1 || isClaiming) return;
-
-    setRewardStage("goToBooth");
-    setShowPopup(true);
-  };
-
-  const handleFinalClaim = async () => {
-    if (isClaiming) return;
 
     setIsClaiming(true);
     try {
       await api.post("/redeem");
       await fetchUser();
-      setRewardStage("claimed");
-      setShowPopup(true);
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
       alert(msg || "Failed to claim reward");
     } finally {
       setIsClaiming(false);
     }
-  };
-
-  const closePopup = () => {
-    setShowPopup(false);
-    setRewardStage("none");
   };
 
   return (
@@ -224,17 +213,16 @@ export default function ActivityCard() {
           style={{
             width: "50%",
             height: "auto",
-            display: "block",
             cursor: rewardsAvailable > 0 && !isClaiming ? "pointer" : "not-allowed",
             opacity: rewardsAvailable > 0 ? 1 : 0.5,
           }}
         />
       </div>
 
-      {/* CLAIM / REWARD POPUP */}
+      {/* REWARD POPUP */}
       {showPopup && (
         <div
-          onClick={closePopup}
+          onClick={() => setShowPopup(false)}
           style={{
             position: "fixed",
             top: 0,
@@ -251,7 +239,7 @@ export default function ActivityCard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "rgba(248, 244, 227, 0.9)",
+              backgroundColor: "rgba(249, 247, 238, 0.9)",
               padding: "24px",
               borderRadius: "16px",
               width: "80%",
@@ -260,76 +248,29 @@ export default function ActivityCard() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
-            {rewardStage === "ready" && (
-              <>
-                <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
-                <p>
-                  You have earned a reward. Tap Claim Reward to
-                  continue.
-                </p>
-                <button
-                  onClick={closePopup}
-                  style={{
-                    background: 'none',
-                    fontWeight: 'bold',
-                    marginTop: "12px",
-                    padding: "10px 18px",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                  }}
-                >
-                  Close
-                </button>
-              </>
-            )}
+            <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
 
-            {rewardStage === "goToBooth" && (
-              <>
-                <h2 style={{ marginTop: 0 }}>Claim Your Reward</h2>
-                <p>Go to the prize booth to claim your reward.</p>
-                <button
-                  onClick={handleFinalClaim}
-                  disabled={isClaiming}
-                  style={{
-                    
-                    background: "none",
-                    marginTop: "12px",
-                    padding: "10px 18px",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: isClaiming ? "not-allowed" : "pointer",
-                    fontSize: "16px",
-                    opacity: isClaiming ? 0.6 : 1,
-                  }}
-                >
-                  {isClaiming ? "Claiming..." : "I’ve Claimed My Reward"}
-                </button>
-              </>
-            )}
+            <p>
+              You have {rewardsAvailable} redeemable reward
+              {rewardsAvailable !== 1 ? "s" : ""}.
+            </p>
 
-            {rewardStage === "claimed" && (
-              <>
-                <h2 style={{ marginTop: 0 }}>Reward Claimed!</h2>
-                <p>Your reward has been marked as claimed.</p>
-                <button
-                  onClick={closePopup}
-                  style={{
-                    background: "none",
-                    fontWeight: "bold",
-                    marginTop: "12px",
-                    padding: "10px 18px",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                  }}
-                >
-                  Close
-                </button>
-              </>
-            )}
+            <p>Head to the prize booth to redeem your reward!</p>
+
+            <button
+              onClick={() => setShowPopup(false)}
+              style={{
+                background: "none",
+                marginTop: "12px",
+                padding: "10px 18px",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              Got it
+            </button>
           </div>
         </div>
       )}
@@ -372,16 +313,19 @@ export default function ActivityCard() {
             >
               Instructions
             </h2>
+
             <p style={{ color: "rgb(48, 26, 3)" }}>
-              Visit stalls and play games to earn stamps. Collect 5 stamps to
-              unlock 1 reward, or collect all 10 stamps to unlock 2 rewards.
-              Once you have enough stamps, tap Claim Reward and head to the
-              prize booth.
+              Visit stalls and play games to earn stamps! Collect 5 stamps to
+              receive 1 reward, or collect all 10 stamps to earn 2 rewards.
+              Once you have enough stamps, head to the prize booth to claim your
+              reward.
             </p>
-            <p style={{ marginTop: "6%", marginBottom: "7%", color: "rgb(48, 26, 3)"  }}>
+
+            <p style={{ marginTop: "6%", marginBottom: "7%" }}>
               Not sure where to go? Use the Map on the home page to find your
               way.
             </p>
+
             <button
               onClick={() => setInfoPopup(false)}
               style={{
