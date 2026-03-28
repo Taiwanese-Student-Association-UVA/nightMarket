@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import stampCard from "../../assets/activity/stampCard.png";
@@ -24,13 +24,14 @@ export default function ActivityCard() {
     "none" | "ready" | "goToBooth" | "claimed"
   >("none");
 
+  const previousStallCount = useRef(0);
+
   const fetchUser = async () => {
     try {
       const res = await api.get("/me");
 
       const pts = Number(res.data?.points || 0);
 
-      // ✅ ensure no duplicates
       const stalls = Array.isArray(res.data?.scannedStalls)
         ? [...new Set(res.data.scannedStalls.map(Number))]
         : [];
@@ -46,17 +47,22 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  // 🔥 SIMPLE + CORRECT LOGIC
   useEffect(() => {
     const count = new Set(scannedStalls).size;
+    const prevCount = previousStallCount.current;
 
-    if (count === 5 || count === 10) {
+    if ((prevCount < 5 && count === 5) || (prevCount < 10 && count === 10)) {
       setRewardStage("ready");
       setShowPopup(true);
     }
+
+    previousStallCount.current = count;
   }, [scannedStalls]);
 
-  const rewardsAvailable = Math.floor(points / POINTS_PER_REWARD);
+  const rewardsAvailable = points >= POINTS_PER_REWARD ? 1 : 0;
+
+  const totalRewardsEarned =
+    scannedStalls.length >= 10 ? 2 : scannedStalls.length >= 5 ? 1 : 0;
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -222,18 +228,14 @@ export default function ActivityCard() {
           src={claimButton}
           alt="Claim Reward"
           onClick={
-            rewardsAvailable > 0 && !isClaiming
-              ? handleClaimClick
-              : undefined
+            rewardsAvailable > 0 && !isClaiming ? handleClaimClick : undefined
           }
           style={{
             width: "50%",
             height: "auto",
             display: "block",
             cursor:
-              rewardsAvailable > 0 && !isClaiming
-                ? "pointer"
-                : "not-allowed",
+              rewardsAvailable > 0 && !isClaiming ? "pointer" : "not-allowed",
             opacity: rewardsAvailable > 0 ? 1 : 0.5,
           }}
         />
@@ -272,10 +274,8 @@ export default function ActivityCard() {
                 <h2 style={{ marginTop: 0 }}>Reward Ready!</h2>
                 <p>
                   You have unlocked{" "}
-                  <strong>
-                    {scannedStalls.length >= 10 ? " another reward" : "a reward"}
-                  </strong>.
-                  Head to the prize booth whenever you’re ready to claim.
+                    {scannedStalls.length >= 10 ? "a reward" : "a reward"}
+                  . Head to the prize booth whenever you’re ready to claim.
                 </p>
                 <button
                   onClick={closePopup}
@@ -320,8 +320,16 @@ export default function ActivityCard() {
 
             {rewardStage === "claimed" && (
               <>
-                <h2 style={{ marginTop: 0 }}>Reward Claimed!</h2>
-                <p>Your reward has been marked as claimed.</p>
+                <h2 style={{ marginTop: 0 }}>
+                  {totalRewardsEarned === 2
+                    ? "2 Rewards Claimed!"
+                    : "1 Reward Claimed!"}
+                </h2>
+                <p>
+                  {totalRewardsEarned === 2
+                    ? "Your two rewards have been marked as claimed."
+                    : "Your reward has been marked as claimed."}
+                </p>
                 <button
                   onClick={closePopup}
                   style={{
