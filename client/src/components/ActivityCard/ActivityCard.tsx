@@ -33,8 +33,8 @@ export default function ActivityCard() {
 
       const pts = Number(res.data?.points || 0);
 
-      const stalls = Array.isArray(res.data?.scannedStalls)
-        ? [...new Set(res.data.scannedStalls.map(Number))]
+      const stalls: number[] = Array.isArray(res.data?.scannedStalls)
+        ? [...new Set((res.data.scannedStalls as number[]).map(Number))]
         : [];
 
       setPoints(pts);
