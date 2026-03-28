@@ -48,7 +48,6 @@ export default function ActivityCard() {
     fetchUser();
   }, []);
 
-  // popup at 5 and 10 stalls (unchanged)
   useEffect(() => {
     const count = new Set(scannedStalls).size;
     const prevCount = previousStallCount.current;
@@ -63,11 +62,9 @@ export default function ActivityCard() {
 
   const uniqueStallCount = new Set(scannedStalls).size;
 
-  // rewards unlocked from stalls
   const totalRewardsUnlocked =
     uniqueStallCount >= 10 ? 2 : uniqueStallCount >= 5 ? 1 : 0;
 
-  // rewards available from points
   const claimRewardCount =
     points >= POINTS_PER_REWARD * 2
       ? 2
@@ -75,9 +72,7 @@ export default function ActivityCard() {
       ? 1
       : 0;
 
-  // 🔴 IMPORTANT: only allow claim if both conditions are met
-  const canClaim =
-    claimRewardCount > 0 && totalRewardsUnlocked > 0;
+  const canClaim = claimRewardCount > 0 && totalRewardsUnlocked > 0;
 
   const stampPositions = [
     { id: 1, top: "43%", left: "16%", rotate: -9 },
@@ -108,13 +103,11 @@ export default function ActivityCard() {
     setClaimedAmount(amountToClaim);
 
     try {
-      // 🔥 FIX: actually redeem BOTH rewards if needed
       for (let i = 0; i < amountToClaim; i++) {
         await api.post("/redeem");
       }
 
       await fetchUser();
-
       setRewardStage("claimed");
       setShowPopup(true);
     } catch (err: unknown) {
@@ -138,42 +131,78 @@ export default function ActivityCard() {
   return (
     <div
       style={{
+        margin: 0,
+        padding: 0,
         width: "100vw",
         minHeight: "100vh",
         overflowX: "hidden",
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
-      <img src={lantern} style={{ width: "100%" }} />
+      <img
+        src={lantern}
+        alt="Lantern"
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
+        }}
+      />
 
-      <div style={{ position: "relative" }}>
-        <img src={stampCard} style={{ width: "100%" }} />
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "100%",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={stampCard}
+          alt="Stamp Card"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+        />
 
         {stampPositions
-          .filter((s) => scannedStalls.includes(s.id))
-          .map((s) => (
+          .filter((stamp) => scannedStalls.includes(stamp.id))
+          .map((stamp) => (
             <img
-              key={s.id}
+              key={stamp.id}
               src={singleStamp}
+              alt={`Stamp ${stamp.id}`}
               style={{
                 position: "absolute",
-                top: s.top,
-                left: s.left,
+                top: stamp.top,
+                left: stamp.left,
                 width: "17%",
-                transform: `translate(-50%, -50%) rotate(${s.rotate}deg)`,
+                height: "auto",
+                transform: `translate(-50%, -50%) rotate(${stamp.rotate}deg)`,
+                transformOrigin: "center",
+                zIndex: 10,
+                pointerEvents: "none",
               }}
             />
           ))}
 
         <img
           src={backStamp}
+          alt="Back"
           onClick={() => navigate("/home")}
+          draggable={false}
           style={{
             position: "absolute",
             top: "-5%",
             left: "6.5%",
             width: "18%",
+            height: "auto",
+            zIndex: 20,
             cursor: "pointer",
           }}
         />
@@ -182,24 +211,48 @@ export default function ActivityCard() {
           onClick={() => setInfoPopup(true)}
           style={{
             position: "absolute",
-            top: "9%",
-            right: "22%",
+            top: "9.25%",
+            right: "22.5%",
             width: "20%",
             height: "20%",
+            zIndex: 20,
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <img src={infoButton} style={{ width: "15%" }} />
+          <img
+            src={infoButton}
+            alt="info"
+            draggable={false}
+            style={{
+              width: "15%",
+              height: "auto",
+              pointerEvents: "none",
+            }}
+          />
         </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: 10,
+          paddingBottom: 20,
+        }}
+      >
         <img
           src={claimButton}
+          alt="Claim Reward"
           onClick={canClaim && !isClaiming ? handleClaimClick : undefined}
           style={{
             width: "50%",
-            cursor: canClaim ? "pointer" : "not-allowed",
+            height: "auto",
+            display: "block",
+            cursor: canClaim && !isClaiming ? "pointer" : "not-allowed",
             opacity: canClaim ? 1 : 0.5,
           }}
         />
@@ -210,55 +263,111 @@ export default function ActivityCard() {
           onClick={closePopup}
           style={{
             position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: 999,
           }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#f8f4e3",
-              padding: 24,
-              borderRadius: 16,
+              backgroundColor: "rgba(248, 244, 227, 0.9)",
+              padding: "24px",
+              borderRadius: "16px",
+              width: "80%",
+              maxWidth: "320px",
               textAlign: "center",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
             {rewardStage === "ready" && (
               <>
-                <h2>Reward Ready!</h2>
+                <h2 style={{ marginTop: '2%', marginBottom: '3%' }}>Reward Ready!</h2>
                 <p>
                   {uniqueStallCount >= 10
-                    ? "You have unlocked 2 rewards."
-                    : "You have unlocked 1 reward."}
+                    ? "You have unlocked 2 rewards. Head to the prize booth whenever you’re ready to claim."
+                    : "You have unlocked 1 reward. Head to the prize booth whenever you’re ready to claim."}
                 </p>
-                <button onClick={closePopup}>Close</button>
+                <button
+                  onClick={closePopup}
+                  style={{
+                    background: "none",
+                    fontWeight: "bold",
+                    marginTop: "12px",
+                    padding: "10px 18px",
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  Close
+                </button>
               </>
             )}
 
             {rewardStage === "goToBooth" && (
               <>
-                <h2>Claim Your Reward</h2>
+                <h2 style={{ marginTop: '2%', marginBottom: '5%' }}>Claim Your Reward</h2>
                 <p>
-                  Claim{" "}
-                  {claimRewardCount === 2 ? "2 rewards" : "your reward"}.
+                  Go to the prize booth to claim{" "} 
+                  {claimRewardCount === 2 ? "your 2 rewards" : "your reward"}.
+                  Show this screen to the attendant and click the button to receive a reward.
                 </p>
-                <button onClick={handleFinalClaim}>
-                  {isClaiming ? "Claiming..." : "I’ve Claimed"}
+                <button
+                  onClick={handleFinalClaim}
+                  disabled={isClaiming}
+                  style={{
+                    background: "none",
+                    marginTop: "12px",
+                    padding: "10px 18px",
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: isClaiming ? "not-allowed" : "pointer",
+                    fontSize: "16px",
+                    opacity: isClaiming ? 0.6 : 1,
+                  }}
+                >
+                  <strong>
+                  {isClaiming ? "Claiming..." : "I'm Here"}
+                  </strong>
                 </button>
               </>
             )}
 
             {rewardStage === "claimed" && (
               <>
-                <h2>
+                <h2 style={{ marginTop: '2%', marginBottom: '5%' }}>
                   {claimedAmount === 2
-                    ? "2 Rewards Claimed!"
-                    : "1 Reward Claimed!"}
+                    ? "2 Rewards Claimed"
+                    : "1 Reward Claimed"}
                 </h2>
-                <button onClick={closePopup}>Close</button>
+                <p>
+                  {claimedAmount === 2
+                    ? "Claiming 2 Rewards!"
+                    : "Claiming Reward!"}
+                </p>
+                <button
+                  onClick={closePopup}
+                  style={{
+                    background: "none",
+                    fontWeight: "bold",
+                    marginTop: "12px",
+                    padding: "10px 18px",
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  Close
+                </button>
               </>
             )}
           </div>
@@ -270,18 +379,46 @@ export default function ActivityCard() {
           onClick={() => setInfoPopup(false)}
           style={{
             position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: 999,
           }}
         >
-          <div onClick={(e) => e.stopPropagation()}>
-            <h2>Instructions</h2>
-            <p>
-              Collect 5 stamps for 1 reward, or 10 stamps for 2 rewards.
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              backgroundColor: "rgba(248, 244, 227, 0.9)",
+              padding: "24px",
+              borderRadius: "16px",
+              width: "80%",
+              textAlign: "center",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h2 style={{ marginTop: "1%", marginBottom: '5%' }}>Instructions</h2>
+            <p style={{marginBottom: '5%'}}>
+              Visit stalls and play games to earn stamps. Collect 5 stamps to
+              unlock 1 reward, or collect all 10 stamps to unlock 2 rewards.
             </p>
+            <button
+              onClick={() => setInfoPopup(false)}
+              style={{
+                position: "absolute",
+                right: "-1%",
+                top: "-3%",
+                background: "none",
+                cursor: "pointer",
+              }}
+            >
+              x
+            </button>
           </div>
         </div>
       )}
