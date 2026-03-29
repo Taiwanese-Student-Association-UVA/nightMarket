@@ -20,22 +20,24 @@ function useVendors(csvUrl: string) {
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-        const fetchData = async () => {
-            const result = await new Promise<Papa.ParseResult<Vendor>>((resolve) => {
-                Papa.parse(csvUrl, { download: true, header: true, complete: resolve });
-            });
-            if (!cancelled) {
-                setVendors(result.data as Vendor[]);
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+      const result = await new Promise<Papa.ParseResult<Vendor>>((resolve) => {
+        Papa.parse(csvUrl, { download: true, header: true, complete: resolve });
+      });
+      if (!cancelled) {
+        setVendors(result.data as Vendor[]);
+        setLoading(false);
+      }
+    };
 
-        fetchData();
-        return () => { cancelled = true; };
-    }, [csvUrl]);
+    fetchData();
+    return () => {
+      cancelled = true;
+    };
+  }, [csvUrl]);
 
   // group vendors by genre, preserving first-seen order and filtering out empty
   const grouped = vendors.reduce<Record<string, Vendor[]>>((acc, v) => {
@@ -101,7 +103,7 @@ function VendorModal({
           style={{
             width: "100%",
             maxWidth: 480,
-            background: "#fffaf8",
+            background: "#f8f9ff",
             borderRadius: "15px 15px 0 0",
             padding: "0 0 32px",
             animation: "modalIn 0.35s cubic-bezier(.22,.97,.47,1) both",
@@ -132,7 +134,7 @@ function VendorModal({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: 26,
                 fontWeight: 700,
-                color: "#2a2018",
+                color: "#18182a",
                 margin: "0 0 10px",
                 lineHeight: 1.2,
               }}
@@ -146,7 +148,7 @@ function VendorModal({
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 15,
                   lineHeight: 1.65,
-                  color: "#4a3c30",
+                  color: "#30344a",
                   margin: "0 0 14px",
                 }}
               >
@@ -165,8 +167,8 @@ function VendorModal({
               {vendor.sub && (
                 <span
                   style={{
-                    background: "#e8ddd4",
-                    color: "#5c4a3a",
+                    background: "#d4d8e8",
+                    color: "#3d3a5c",
                     borderRadius: 20,
                     padding: "5px 14px",
                     fontFamily: "'DM Sans', sans-serif",
@@ -180,8 +182,8 @@ function VendorModal({
               {vendor.sub2 && (
                 <span
                   style={{
-                    background: "#d4c9bc",
-                    color: "#4a3a2a",
+                    background: "#bcbed4",
+                    color: "#2b2a4a",
                     borderRadius: 20,
                     padding: "5px 14px",
                     fontFamily: "'DM Sans', sans-serif",
@@ -199,8 +201,8 @@ function VendorModal({
               style={{
                 width: "100%",
                 padding: "14px",
-                background: "#2a2018",
-                color: "#fffaf8",
+                background: "#18182a",
+                color: "#f8f8ff",
                 border: "none",
                 borderRadius: 14,
                 fontFamily: "'DM Sans', sans-serif",
@@ -238,7 +240,7 @@ function VendorCard({
       style={{
         borderRadius: 5,
         overflow: "hidden",
-        background: "#f5ede7",
+        background: "#e7e7f5",
         cursor: "pointer",
         transform: pressed ? "scale(0.97)" : "scale(1)",
         transition: "transform 0.15s ease",
@@ -268,7 +270,7 @@ function VendorCard({
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
             fontWeight: 600,
-            color: "#2a2018",
+            color: "#18182a",
             lineHeight: 1.3,
           }}
         >
@@ -313,7 +315,7 @@ function GenreSection({
       <div
         style={{
           marginBottom: 2,
-          borderBottom: "1px solid #e8ddd4",
+          borderBottom: "1px solid #d4d7e8",
         }}
       >
         {/* accordion header */}
@@ -338,7 +340,7 @@ function GenreSection({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: 20,
                 fontWeight: 700,
-                color: "#2a2018",
+                color: "#18182a",
                 letterSpacing: "-0.01em",
               }}
             >
@@ -348,8 +350,8 @@ function GenreSection({
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12,
-                color: "#a89080",
-                background: "#f0e8e0",
+                color: "#8084a8",
+                background: "#e0e2f0",
                 borderRadius: 20,
                 padding: "2px 10px",
                 fontWeight: 500,
@@ -365,7 +367,7 @@ function GenreSection({
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#a89080"
+            stroke="#808ba8"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -433,7 +435,7 @@ export default function Menu() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#fffaf8",
+          background: "#f8f9ff",
           paddingBottom: 40,
           maxWidth: 480,
           margin: "0 auto",
@@ -450,7 +452,7 @@ export default function Menu() {
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: 38,
               fontWeight: 900,
-              color: "#2a2018",
+              color: "#181b2a",
               margin: "0 0 6px",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
@@ -469,7 +471,7 @@ export default function Menu() {
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: "#8a7060",
+                color: "#60648a",
                 margin: 0,
                 lineHeight: 1.5,
               }}
@@ -488,7 +490,7 @@ export default function Menu() {
               justifyContent: "center",
               padding: "60px 0",
               fontFamily: "'DM Sans', sans-serif",
-              color: "#8a7060",
+              color: "#60668a",
               fontSize: 14,
             }}
           >
