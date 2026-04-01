@@ -39,7 +39,7 @@ function useVendors(csvUrl: string) {
     };
   }, [csvUrl]);
 
-  // group vendors by genre, preserving first-seen order and filtering out empty
+  // group vendors by genre, preserving first-seen order and filtering out empty.
   const grouped = vendors.reduce<Record<string, Vendor[]>>((acc, v) => {
     const key = v.genre?.trim() || "Other";
     if (!acc[key]) acc[key] = [];
