@@ -9,17 +9,26 @@ const app = express();
 const JWT_SECRET = process.env.JWT_SECRET!;
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [];
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://tsa-night-market.vercel.app"
-  ]
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  }
 }));
+
 app.use(express.json());
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log("Allowed origins:", allowedOrigins);
+});
 
 /* ---------------- AUTH MIDDLEWARE ---------------- */
 
@@ -167,7 +176,9 @@ app.post("/redeem", authenticateToken, async (req: any, res) => {
 
   const rewardsAvailable = Math.floor(user.points / POINTS_PER_REWARD);
   if (rewardsAvailable < 1) {
-    return res.status(400).json({ message: "Not enough points. You need 50 points (5 stamps) to claim a reward." });
+    return res.status(400).json({
+      message: "Not enough points. You need 50 points (5 stamps) to claim a reward."
+    });
   }
 
   const newPoints = user.points - POINTS_PER_REWARD;
