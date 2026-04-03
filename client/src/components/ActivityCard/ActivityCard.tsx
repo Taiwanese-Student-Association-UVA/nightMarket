@@ -162,7 +162,7 @@ export default function ActivityCard() {
             height: "auto",
             display: "block",
             paddingTop: '0%',
-            paddingBottom: '7%'
+            paddingBottom: '5%'
           }}
         />
 
@@ -414,7 +414,7 @@ export default function ActivityCard() {
               borderRadius: "16px",
               width: "80%",
               textAlign: "center",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+              //boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
             <h2 style={{ marginTop: "1%", marginBottom: '5%' }}>Instructions</h2>

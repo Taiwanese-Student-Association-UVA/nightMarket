@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
 import headerSvg from "../../assets/panels/overlay_building_lantern.png";
-import activitySvg from "../../assets/panels/game stamps.png";
+import activitySvg from "../../assets/panels/stamp card.png";
 import merchSvg from "../../assets/panels/merch.png";
-import menuSvg from "../../assets/panels/menu.png";
+import menuSvg from "../../assets/panels/stalls.png";
 import infoSvg from "../../assets/panels/schedule + map.png";
 import sponsorsSvg from "../../assets/panels/sponsors.png";
 
