@@ -68,8 +68,8 @@ export default function Home() {
 
       <img
         src={merchSvg}
-        alt="Merch"
-        onClick={() => navigate("/merch")}
+        alt="Schedule"
+        onClick={() => navigate("/schedule")}
         style={{
           position: "absolute",
           left: "57.179%",

@@ -1,288 +1,157 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 import BackButton from "../BackButton";
 
-// ─── types ────────────────────────────────────────────────────────────────────
-
-interface ScheduleRow {
-  time: string;
-  event: string;
-  description: string;
-}
-
 interface StandInfo {
   number: number;
-  stall: string; // matches "stall" column in vendors sheet
+  name: string;
 }
 
-// ─── constants ────────────────────────────────────────────────────────────────
+// CSV URLs for different times
+const VENDORS_CSV_BEFORE_8PM =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWtg5juZf3raTsoj6c-MeMNSluH1c4aXcxkQl4cQuqR4ByJh78PT4TyKiKXeICy9cDi7u6H_zXMiHG/pub?gid=419450507&single=true&output=csv";
+const VENDORS_CSV_AFTER_8PM =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWtg5juZf3raTsoj6c-MeMNSluH1c4aXcxkQl4cQuqR4ByJh78PT4TyKiKXeICy9cDi7u6H_zXMiHG/pub?gid=270934886&single=true&output=csv";
 
-// Replace with your actual published CSV URL for the schedule sheet
-const SCHEDULE_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRWtg5juZf3raTsoj6c-MeMNSluH1c4aXcxkQl4cQuqR4ByJh78PT4TyKiKXeICy9cDi7u6H_zXMiHG/pub?gid=476880880&single=true&output=csv";
+// Expected CSV columns: number, stall (or whatever your columns are named)
+interface VendorRow {
+  number: string; // or number if it's a number column
+  name: string;
+}
 
-// Map each stand number to its stall name (must match the "stall" column in your vendors sheet exactly)
-const STAND_MAP: StandInfo[] = [
-  { number: 1, stall: "Stall Name 1" },
-  { number: 2, stall: "Stall Name 2" },
-  { number: 3, stall: "Stall Name 3" },
-  { number: 4, stall: "Stall Name 4" },
-  { number: 5, stall: "Stall Name 5" },
-  { number: 6, stall: "Stall Name 6" },
-  { number: 7, stall: "Stall Name 7" },
-  { number: 8, stall: "Stall Name 8" },
-  { number: 9, stall: "Stall Name 9" },
-  { number: 10, stall: "Stall Name 10" },
-  { number: 11, stall: "Stall Name 11" },
-  { number: 12, stall: "Stall Name 12" },
-  { number: 13, stall: "Stall Name 13" },
-  { number: 14, stall: "Stall Name 14" },
-  { number: 15, stall: "Stall Name 15" },
-  { number: 16, stall: "Stall Name 16" },
-  { number: 17, stall: "Stall Name 17" },
-  { number: 18, stall: "Stall Name 18" },
-  { number: 19, stall: "Stall Name 19" },
-  { number: 20, stall: "Stall Name 20" },
-  { number: 21, stall: "Stall Name 21" },
-  { number: 22, stall: "Stall Name 22" },
-  { number: 23, stall: "Stall Name 23" },
-  { number: 24, stall: "Stall Name 24" },
-  { number: 25, stall: "Stall Name 25" },
-  { number: 26, stall: "Stall Name 26" },
-  { number: 27, stall: "Stall Name 27" },
-  { number: 28, stall: "Stall Name 28" },
-  { number: 29, stall: "Stall Name 29" },
-  { number: 30, stall: "Stall Name 30" },
-  { number: 31, stall: "Stall Name 31" },
-  { number: 32, stall: "Stall Name 32" },
-  { number: 33, stall: "Stall Name 33" },
-  { number: 34, stall: "Stall Name 34" },
-  { number: 35, stall: "Stall Name 35" },
-  { number: 36, stall: "Stall Name 36" },
-  { number: 37, stall: "Stall Name 37" },
-  { number: 38, stall: "Stall Name 38" },
-  { number: 39, stall: "Stall Name 39" },
-  { number: 40, stall: "Stall Name 40" },
-];
-
-// ─── hooks ────────────────────────────────────────────────────────────────────
-
-function useSchedule(csvUrl: string) {
-  const [rows, setRows] = useState<ScheduleRow[]>([]);
+function useVendors(csvUrl: string) {
+  const [vendors, setVendors] = useState<StandInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Papa.parse(csvUrl, {
       download: true,
       header: true,
-      complete: (result: Papa.ParseResult<ScheduleRow>) => {
-        setRows(result.data.filter((r) => r.time || r.event));
+      complete: (result: Papa.ParseResult<VendorRow>) => {
+        const mappedVendors = result.data
+          .filter((row) => row.number && row.name)
+          .map((row) => ({
+            number: parseInt(row.number, 10),
+            name: row.name,
+          }));
+        setVendors(mappedVendors);
+        setLoading(false);
+      },
+      error: (error) => {
+        console.error("Error parsing CSV:", error);
         setLoading(false);
       },
     });
   }, [csvUrl]);
 
-  return { rows, loading };
+  return { vendors, loading };
 }
 
-// ─── schedule tab ─────────────────────────────────────────────────────────────
+// Helper function to determine which CSV to use based on current time
+function getCurrentVendorsCsvUrl(): string {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const currentTimeInMinutes = hours * 60 + minutes;
+  const eightPMInMinutes = 20 * 60; // 8:00 PM = 20:00
 
-function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div
-      onClick={() => row.description && setExpanded((e) => !e)}
-      style={{
-        background: "#fffaf8",
-        borderRadius: 14,
-        padding: "14px 16px",
-        marginBottom: 10,
-        boxShadow: "0 1px 8px rgba(0,0,0,0.07)",
-        cursor: row.description ? "pointer" : "default",
-        borderLeft: `4px solid ${index % 3 === 0 ? "#c8a882" : index % 3 === 1 ? "#a8b87a" : "#c9848a"}`,
-        transition: "box-shadow 0.15s",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: 10,
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "#63608a",
-              margin: "0 0 3px",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            {row.time}
-          </p>
-          <p
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 17,
-              fontWeight: 700,
-              color: "#1c182a",
-              margin: 0,
-              lineHeight: 1.3,
-            }}
-          >
-            {row.event}
-          </p>
-        </div>
-        {row.description && (
-          <span
-            style={{
-              fontSize: 18,
-              color: "#8298c8",
-              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "transform 0.2s",
-              flexShrink: 0,
-              marginTop: 2,
-            }}
-          >
-            ↓
-          </span>
-        )}
-      </div>
-
-      {expanded && row.description && (
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-            color: "#39416e",
-            margin: "10px 0 0",
-            lineHeight: 1.6,
-            borderTop: "1px solid #dce3ed",
-            paddingTop: 10,
-          }}
-        >
-          {row.description}
-        </p>
-      )}
-    </div>
-  );
+  return currentTimeInMinutes < eightPMInMinutes
+    ? VENDORS_CSV_BEFORE_8PM
+    : VENDORS_CSV_AFTER_8PM;
 }
-
-function ScheduleTab() {
-  const { rows, loading } = useSchedule(SCHEDULE_CSV_URL);
-
-  return (
-    <div style={{ padding: "20px 16px" }}>
-      {loading ? (
-        <p
-          style={{
-            textAlign: "center",
-            color: "#60668a",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-          }}
-        >
-          Loading schedule…
-        </p>
-      ) : rows.length === 0 ? (
-        <p
-          style={{
-            textAlign: "center",
-            color: "#60638a",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14,
-          }}
-        >
-          Schedule coming soon!
-        </p>
-      ) : (
-        rows.map((row, i) => <ScheduleCard key={i} row={row} index={i} />)
-      )}
-    </div>
-  );
-}
-
-// ─── venue map ────────────────────────────────────────────────────────────────
-
-// Stand group positions: each group is a 2×2 or 2×1 cluster of numbered boxes
-// Coordinates are in SVG viewBox units (0 0 400 380)
-// Each stand box is 18×18, with 2px gap inside a group
 
 interface StandBox {
-  n: number; // stand number
-  x: number; // top-left x
-  y: number; // top-left y
+  n: number;
+  x: number;
+  y: number;
+  rotate?: number; // rotation in degrees, around center of box
 }
 
+// BOX size is 18x18; rotate is applied around the box center
 const STAND_BOXES: StandBox[] = [
-  // Group top-left (1–4)
-  { n: 1, x: 62, y: 118 },
-  { n: 2, x: 82, y: 118 },
-  { n: 3, x: 62, y: 138 },
-  { n: 4, x: 82, y: 138 },
-  // Group mid-left (5–8)
-  { n: 5, x: 62, y: 168 },
-  { n: 6, x: 82, y: 168 },
-  { n: 7, x: 62, y: 188 },
-  { n: 8, x: 82, y: 188 },
-  // Group center-left-upper (9–12)
-  { n: 9, x: 88, y: 208 },
-  { n: 10, x: 108, y: 208 },
-  { n: 11, x: 88, y: 228 },
-  { n: 12, x: 108, y: 228 },
-  // Group center-left-lower (13–16)
-  { n: 13, x: 102, y: 252 },
-  { n: 14, x: 122, y: 252 },
-  { n: 15, x: 102, y: 272 },
-  { n: 16, x: 122, y: 272 },
-  // Group center (17–20)
-  { n: 17, x: 148, y: 268 },
-  { n: 18, x: 168, y: 268 },
-  { n: 19, x: 148, y: 288 },
-  { n: 20, x: 168, y: 288 },
-  // Group center-right (21–24)
-  { n: 21, x: 210, y: 272 },
-  { n: 22, x: 230, y: 272 },
-  { n: 23, x: 210, y: 292 },
-  { n: 24, x: 230, y: 292 },
-  // Group right-lower (25–28)
-  { n: 25, x: 252, y: 258 },
-  { n: 26, x: 272, y: 258 },
-  { n: 27, x: 252, y: 278 },
-  { n: 28, x: 272, y: 278 },
-  // Group right-mid (29–32)
-  { n: 29, x: 268, y: 228 },
-  { n: 30, x: 288, y: 228 },
-  { n: 31, x: 268, y: 248 },
-  { n: 32, x: 288, y: 248 },
-  // Group right-upper (33–36)
-  { n: 33, x: 278, y: 188 },
-  { n: 34, x: 298, y: 188 },
-  { n: 35, x: 278, y: 168 },
-  { n: 36, x: 298, y: 168 },
-  // Group top-right (37–40)
-  { n: 37, x: 288, y: 128 },
-  { n: 38, x: 308, y: 128 },
-  { n: 39, x: 288, y: 108 },
-  { n: 40, x: 308, y: 108 },
+  // Group 1–4: top-left, upright 2×2
+  { n: 1, x: 58, y: 112 },
+  { n: 2, x: 78, y: 112 },
+  { n: 3, x: 58, y: 132 },
+  { n: 4, x: 78, y: 132 },
+
+  // Group 5–8: mid-left, upright 2×2
+  { n: 5, x: 52, y: 162 },
+  { n: 6, x: 72, y: 162 },
+  { n: 7, x: 52, y: 182 },
+  { n: 8, x: 72, y: 182 },
+
+  // Group 9–12: lower-left, upright 2×2
+  { n: 9, x: 72, y: 210 },
+  { n: 10, x: 92, y: 210 },
+  { n: 11, x: 72, y: 230 },
+  { n: 12, x: 92, y: 230 },
+
+  // Group 13–16: angled ~25°, outside boxes (13,15) on left, inside (14,16) on right
+  // 13 top-left, 14 top-right (inside), 15 bottom-left, 16 bottom-right (inside)
+  { n: 13, x: 100, y: 256, rotate: 25 },
+  { n: 14, x: 118, y: 248, rotate: 25 },
+  { n: 15, x: 106, y: 274, rotate: 25 },
+  { n: 16, x: 124, y: 266, rotate: 25 },
+
+  // Group 17–20: center-bottom, upright 2×2
+  { n: 18, x: 152, y: 262 },
+  { n: 20, x: 172, y: 262 },
+  { n: 17, x: 152, y: 282 },
+  { n: 19, x: 172, y: 282 },
+
+  // Group 21–24: center-right-bottom, upright 2×2
+  { n: 22, x: 208, y: 262 },
+  { n: 24, x: 228, y: 262 },
+  { n: 21, x: 208, y: 282 },
+  { n: 23, x: 228, y: 282 },
+
+  // Group 25–28: angled ~-25°, inside boxes (26,28) on left, outside (25,27) on right
+  // 28 top-left (inside), 26 below it (inside), 27 top-right, 25 bottom-right
+  { n: 28, x: 252, y: 248, rotate: -25 },
+  { n: 26, x: 258, y: 266, rotate: -25 },
+  { n: 27, x: 270, y: 256, rotate: -25 },
+  { n: 25, x: 276, y: 274, rotate: -25 },
+
+  // Group 29–32: right side, upright 2×2
+  { n: 30, x: 282, y: 220 },
+  { n: 32, x: 302, y: 220 },
+  { n: 29, x: 282, y: 240 },
+  { n: 31, x: 302, y: 240 },
+
+  // Group 33–36: upper-right, upright 2×2
+  { n: 36, x: 290, y: 158 },
+  { n: 35, x: 310, y: 158 },
+  { n: 34, x: 290, y: 178 },
+  { n: 33, x: 310, y: 178 },
+
+  // Group 37–40: top-right, upright 2×2
+  { n: 40, x: 294, y: 100 },
+  { n: 39, x: 314, y: 100 },
+  { n: 38, x: 294, y: 120 },
+  { n: 37, x: 314, y: 120 },
 ];
 
-function VenueMap({ onStandTap }: { onStandTap: (n: number) => void }) {
+function VenueMap({
+  vendors,
+  onStandTap,
+  loading,
+}: {
+  vendors: StandInfo[];
+  onStandTap: (n: number) => void;
+  loading: boolean;
+}) {
   const [activeStand, setActiveStand] = useState<number | null>(null);
+  const BOX = 18;
 
   const handleTap = (n: number) => {
     setActiveStand(n);
     onStandTap(n);
   };
 
-  const BOX = 18;
+  // Create a map for quick lookup
+  const vendorMap = new Map(vendors.map((v) => [v.number, v.name]));
 
   return (
     <div style={{ width: "100%", overflowX: "auto", padding: "12px 0" }}>
@@ -296,202 +165,88 @@ function VenueMap({ onStandTap }: { onStandTap: (n: number) => void }) {
         }}
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* ── venue outline: amphitheatre arc ── */}
-        {/* Outer grassy area */}
-        <ellipse cx="200" cy="185" rx="190" ry="165" fill="#eef3d8" />
-        {/* Inner paved area */}
-        <ellipse cx="200" cy="175" rx="160" ry="140" fill="#f7f3ed" />
+        <ellipse cx="200" cy="185" rx="190" ry="165" fill="#ffffff" />
+        <ellipse cx="200" cy="175" rx="160" ry="140" fill="#ffea8f" />
 
-        {/* sidewalk path label bottom */}
         <text
-          x="200"
-          y="326"
-          textAnchor="middle"
-          fontSize="7"
-          fill="#a09080"
+          x="15"
+          y="270"
+          fontSize="8"
+          fill="#192147"
           fontFamily="'DM Sans', sans-serif"
-        >
-          sidewalk / path
-        </text>
-        {/* sidewalk left */}
-        <text
-          x="22"
-          y="200"
-          textAnchor="middle"
-          fontSize="7"
-          fill="#a09080"
-          fontFamily="'DM Sans', sans-serif"
-          transform="rotate(-90 22 200)"
-        >
-          sidewalk / path
-        </text>
-        {/* sidewalk right */}
-        <text
-          x="378"
-          y="200"
-          textAnchor="middle"
-          fontSize="7"
-          fill="#a09080"
-          fontFamily="'DM Sans', sans-serif"
-          transform="rotate(90 378 200)"
-        >
-          sidewalk / path
-        </text>
-
-        {/* seating/stairs arcs labels */}
-        <text
-          x="52"
-          y="290"
-          fontSize="7"
-          fill="#a09080"
-          fontFamily="'DM Sans', sans-serif"
-          transform="rotate(-35 52 290)"
+          transform="rotate(50 52 290)"
         >
           seating / stairs
         </text>
         <text
-          x="318"
-          y="268"
-          fontSize="7"
-          fill="#a09080"
+          x="300"
+          y="287"
+          fontSize="8"
+          fill="#192147"
           fontFamily="'DM Sans', sans-serif"
-          transform="rotate(35 318 268)"
+          transform="rotate(-50 318 268)"
         >
           seating / stairs
         </text>
 
-        {/* ── stage ── */}
-        <rect
-          x="58"
-          y="18"
-          width="284"
-          height="58"
-          rx="4"
-          fill="#d8d0c4"
-          stroke="#b8a898"
-          strokeWidth="1.5"
-        />
+        <rect x="58" y="18" width="284" height="58" rx="4" fill="#ffffff" />
         <text
           x="200"
           y="52"
           textAnchor="middle"
-          fontSize="11"
+          fontSize="12"
           fontWeight="700"
-          fill="#5a4a3a"
+          fill="#192147"
           fontFamily="'Playfair Display', serif"
         >
           Stage
         </text>
-        {/* steps */}
-        <rect x="108" y="74" width="16" height="6" rx="1" fill="#c8bfb2" />
-        <rect x="276" y="74" width="16" height="6" rx="1" fill="#c8bfb2" />
-        <text
-          x="116"
-          y="85"
-          textAnchor="middle"
-          fontSize="5.5"
-          fill="#9a8a7a"
-          fontFamily="'DM Sans', sans-serif"
-        >
-          steps
-        </text>
-        <text
-          x="284"
-          y="85"
-          textAnchor="middle"
-          fontSize="5.5"
-          fill="#9a8a7a"
-          fontFamily="'DM Sans', sans-serif"
-        >
-          steps
-        </text>
 
-        {/* ── prime seating area label ── */}
         <text
           x="200"
           y="150"
           textAnchor="middle"
           fontSize="9"
-          fill="#b8a898"
+          fill="#151536"
           fontFamily="'DM Sans', sans-serif"
           fontStyle="italic"
         >
-          prime seating area
+          Performance Seating Area
         </text>
 
-        {/* ── grass area ── */}
-        <ellipse
-          cx="200"
-          cy="300"
-          rx="32"
-          ry="10"
-          fill="#b8d4a0"
-          opacity="0.7"
-        />
+        <rect x="173" y="319" width="52" height="16" rx="7" fill="#ffe385a9" />
         <text
-          x="200"
-          y="303"
+          x="199"
+          y="330"
           textAnchor="middle"
-          fontSize="7"
-          fill="#6a8a5a"
-          fontFamily="'DM Sans', sans-serif"
-          fontStyle="italic"
-        >
-          grass area
-        </text>
-
-        {/* ── check-in ── */}
-        <rect
-          x="162"
-          y="318"
-          width="48"
-          height="14"
-          rx="7"
-          fill="#d0dafd"
-          stroke="#787ae8"
-          strokeWidth="1"
-        />
-        <text
-          x="186"
-          y="328"
-          textAnchor="middle"
-          fontSize="7.5"
+          fontSize="9"
           fontWeight="600"
-          fill="#32308a"
+          fill="#151536"
           fontFamily="'DM Sans', sans-serif"
         >
           Check-in!
         </text>
-        {/* line arrows */}
-        <text
-          x="130"
-          y="328"
-          textAnchor="middle"
-          fontSize="6.5"
-          fill="#61608a"
-          fontFamily="'DM Sans', sans-serif"
-        >
-          ← Line 2
-        </text>
-        <text
-          x="248"
-          y="328"
-          textAnchor="middle"
-          fontSize="6.5"
-          fill="#61608a"
-          fontFamily="'DM Sans', sans-serif"
-        >
-          Line 1 →
-        </text>
 
-        {/* ── stand boxes ── */}
-        {STAND_BOXES.map(({ n, x, y }) => {
+        <polygon
+          points="200,270 203,282 210,285 203,288 200,300 197,288 190,285 197,282"
+          fill="#2a2018"
+        />
+
+        {STAND_BOXES.map(({ n, x, y, rotate }) => {
           const isActive = activeStand === n;
+          const hasVendor = vendorMap.has(n);
+          const cx = x + BOX / 2;
+          const cy = y + BOX / 2;
+          const transform = rotate
+            ? `rotate(${rotate} ${cx} ${cy})`
+            : undefined;
+
           return (
             <g
               key={n}
               onClick={() => handleTap(n)}
-              style={{ cursor: "pointer" }}
+              transform={transform}
+              style={{ cursor: hasVendor ? "pointer" : "default" }}
             >
               <rect
                 x={x}
@@ -499,17 +254,17 @@ function VenueMap({ onStandTap }: { onStandTap: (n: number) => void }) {
                 width={BOX}
                 height={BOX}
                 rx="3"
-                fill={isActive ? "#c8a882" : "#fffaf8"}
-                stroke={isActive ? "#8a6040" : "#b8a898"}
+                fill={isActive ? "#ffd857" : hasVendor ? "#ffffff" : "#ffe9d2"}
                 strokeWidth={isActive ? 1.5 : 1}
+                opacity={hasVendor ? 1 : 0.6}
               />
               <text
-                x={x + BOX / 2}
-                y={y + BOX / 2 + 4}
+                x={cx}
+                y={cy + 4}
                 textAnchor="middle"
                 fontSize="7"
                 fontWeight={isActive ? "700" : "500"}
-                fill={isActive ? "#fff" : "#4a3a2a"}
+                fill={isActive ? "#151536" : hasVendor ? "#4a3a2a" : "#9a9692"}
                 fontFamily="'DM Sans', sans-serif"
                 style={{ pointerEvents: "none", userSelect: "none" }}
               >
@@ -523,19 +278,17 @@ function VenueMap({ onStandTap }: { onStandTap: (n: number) => void }) {
   );
 }
 
-// ─── stand tooltip ────────────────────────────────────────────────────────────
-
 function StandTooltip({
   standNumber,
+  stallName,
   onNavigate,
   onDismiss,
 }: {
   standNumber: number;
+  stallName: string;
   onNavigate: () => void;
   onDismiss: () => void;
 }) {
-  const info = STAND_MAP.find((s) => s.number === standNumber);
-
   return (
     <div
       style={{
@@ -561,7 +314,7 @@ function StandTooltip({
           width: 36,
           height: 36,
           borderRadius: 10,
-          background: "#8382c8",
+          background: "#b3942e",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -580,7 +333,7 @@ function StandTooltip({
             margin: 0,
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 13,
-            color: "#a8abc8",
+            color: "#c8c0a8",
           }}
         >
           Stand {standNumber}
@@ -593,16 +346,16 @@ function StandTooltip({
             fontWeight: 700,
           }}
         >
-          {info?.stall ?? "Unassigned"}
+          {stallName}
         </p>
       </div>
       <button
         onClick={onNavigate}
         style={{
-          background: "#8289c8",
+          background: "#f0e1a2",
           border: "none",
           borderRadius: 10,
-          color: "#fff",
+          color: "#523e1a",
           fontFamily: "'DM Sans', sans-serif",
           fontSize: 12,
           fontWeight: 600,
@@ -632,129 +385,37 @@ function StandTooltip({
   );
 }
 
-// ─── map tab ──────────────────────────────────────────────────────────────────
-
-function MapTab() {
+export default function Info() {
   const navigate = useNavigate();
   const [tappedStand, setTappedStand] = useState<number | null>(null);
+  const [csvUrl, setCsvUrl] = useState(getCurrentVendorsCsvUrl());
+  const { vendors, loading } = useVendors(csvUrl);
+
+  // Check for time changes and update CSV if needed
+  useEffect(() => {
+    const checkTimeAndUpdate = () => {
+      const newCsvUrl = getCurrentVendorsCsvUrl();
+      if (newCsvUrl !== csvUrl) {
+        setCsvUrl(newCsvUrl);
+      }
+    };
+
+    // Check every minute if we've crossed 8 PM
+    const interval = setInterval(checkTimeAndUpdate, 60000);
+
+    return () => clearInterval(interval);
+  }, [csvUrl]);
+
+  // Create a map for quick lookup
+  const vendorMap = new Map(vendors.map((v) => [v.number, v.name]));
 
   const handleNavigate = () => {
     if (tappedStand === null) return;
-    const info = STAND_MAP.find((s) => s.number === tappedStand);
-    if (info) {
-      // Navigate to vendors page with the stall name as a query param
-      navigate(`/vendors?stall=${encodeURIComponent(info.stall)}`);
+    const stallName = vendorMap.get(tappedStand);
+    if (stallName) {
+      navigate(`/vendors?stall=${encodeURIComponent(stallName)}`);
     }
   };
-
-  return (
-    <div style={{ padding: "16px 16px 80px" }}>
-      <p
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 13,
-          color: "#61608a",
-          margin: "0 0 12px",
-          textAlign: "center",
-        }}
-      >
-        Tap a stand number to find out who's there
-      </p>
-
-      <VenueMap onStandTap={(n) => setTappedStand(n)} />
-
-      {/* legend */}
-      <div
-        style={{
-          marginTop: 16,
-          background: "#f8f9ff",
-          borderRadius: 14,
-          padding: "14px 16px",
-          boxShadow: "0 1px 8px rgba(0,0,0,0.07)",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 15,
-            fontWeight: 700,
-            color: "#19182a",
-            margin: "0 0 10px",
-          }}
-        >
-          Stand Legend
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "6px 12px",
-          }}
-        >
-          {STAND_MAP.map(({ number, stall }) => (
-            <div
-              key={number}
-              onClick={() => setTappedStand(number)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                cursor: "pointer",
-              }}
-            >
-              <span
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 6,
-                  background: tappedStand === number ? "#8289c8" : "#ede5dc",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color: tappedStand === number ? "#ffffff" : "#3a3d5a",
-                  flexShrink: 0,
-                  transition: "background 0.15s",
-                }}
-              >
-                {number}
-              </span>
-              <span
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  color: "#2a2c4a",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {stall}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {tappedStand !== null && (
-        <StandTooltip
-          standNumber={tappedStand}
-          onNavigate={handleNavigate}
-          onDismiss={() => setTappedStand(null)}
-        />
-      )}
-    </div>
-  );
-}
-
-// ─── main page ────────────────────────────────────────────────────────────────
-
-type Tab = "schedule" | "map";
-
-export default function EventInfo() {
-  const [tab, setTab] = useState<Tab>("schedule");
 
   return (
     <>
@@ -766,12 +427,11 @@ export default function EventInfo() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#e7eaf5",
+          background: "#f3d75b63",
           maxWidth: 480,
           margin: "0 auto",
         }}
       >
-        {/* header */}
         <div style={{ padding: "16px 20px 0" }}>
           <BackButton />
           <h1
@@ -785,47 +445,140 @@ export default function EventInfo() {
               letterSpacing: "-0.02em",
             }}
           >
-            Event Info
+            NightMarket Map
           </h1>
         </div>
 
-        {/* tabs */}
         <div
           style={{
+            padding: "16px 16px 80px",
             display: "flex",
-            margin: "0 16px 4px",
-            background: "#dcdced",
-            borderRadius: 14,
-            padding: 4,
-            gap: 4,
+            flexDirection: "column",
           }}
         >
-          {(["schedule", "map"] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              style={{
-                flex: 1,
-                padding: "10px 0",
-                border: "none",
-                borderRadius: 10,
-                background: tab === t ? "#18182a" : "transparent",
-                color: tab === t ? "#f8f9ff" : "#61608a",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "background 0.18s, color 0.18s",
-                textTransform: "capitalize",
-              }}
-            >
-              {t === "schedule" ? "Schedule" : "Map"}
-            </button>
-          ))}
-        </div>
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              color: "#61608a",
+              margin: "8px 0 12px",
+              textAlign: "center",
+            }}
+          >
+            Tap a stand number to find out who's there!
+          </p>
 
-        {/* content */}
-        {tab === "schedule" ? <ScheduleTab /> : <MapTab />}
+          {loading ? (
+            <div style={{ textAlign: "center", padding: "40px 20px" }}>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "#60668a",
+                  fontSize: 14,
+                }}
+              >
+                Loading map information...
+              </p>
+            </div>
+          ) : (
+            <>
+              <VenueMap
+                vendors={vendors}
+                onStandTap={(n) => setTappedStand(n)}
+                loading={loading}
+              />
+
+              <div
+                style={{
+                  marginTop: 16,
+                  background: "#f8f9ff",
+                  borderRadius: 14,
+                  padding: "14px 16px",
+                  boxShadow: "0 1px 8px rgba(0,0,0,0.07)",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "#19182a",
+                    margin: "0 0 10px",
+                  }}
+                >
+                  Stand Legend
+                </p>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "6px 12px",
+                  }}
+                >
+                  {STAND_BOXES.map(({ n }) => {
+                    const stallName = vendorMap.get(n);
+                    if (!stallName) return null;
+
+                    return (
+                      <div
+                        key={n}
+                        onClick={() => setTappedStand(n)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 22,
+                            height: 22,
+                            borderRadius: 6,
+                            background:
+                              tappedStand === n ? "#8289c8" : "#ede5dc",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: tappedStand === n ? "#ffffff" : "#3a3d5a",
+                            flexShrink: 0,
+                            transition: "background 0.15s",
+                          }}
+                        >
+                          {n}
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12,
+                            color: "#2a2c4a",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {stallName}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+
+          {tappedStand !== null && vendorMap.has(tappedStand) && (
+            <StandTooltip
+              standNumber={tappedStand}
+              stallName={vendorMap.get(tappedStand)!}
+              onNavigate={handleNavigate}
+              onDismiss={() => setTappedStand(null)}
+            />
+          )}
+        </div>
       </div>
     </>
   );
