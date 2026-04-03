@@ -414,22 +414,24 @@ export default function ActivityCard() {
               borderRadius: "16px",
               width: "80%",
               textAlign: "center",
-              //boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
             <h2 style={{ marginTop: "1%", marginBottom: '5%' }}>Instructions</h2>
             <p style={{marginBottom: '5%'}}>
-              Visit stalls and play games to earn stamps. Collect 5 stamps to
-              unlock 1 reward, or collect all 10 stamps to unlock 2 rewards.
+              Visit the game and merch stands to collect stamps. Some 
+              of the stalls will be replaced with food after performances, so get your stamps while you can!
             </p>
             <button
               onClick={() => setInfoPopup(false)}
               style={{
                 position: "absolute",
-                right: "-1%",
-                top: "-3%",
+                right: "5%",
+                top: "5%",
                 background: "none",
                 cursor: "pointer",
+                outline: "none",
+                border: "none"
               }}
             >
               x
