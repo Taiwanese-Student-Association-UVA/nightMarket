@@ -9,6 +9,7 @@ import infoButton from "../../assets/activity/information-button.png";
 import background from "../../assets/BG.png";
 import lantern from "../../assets/activity/lantern.png";
 import text from '../../assets/activity/LUCKY PUNCH TEXT.png'
+
 export default function ActivityCard() {
   const navigate = useNavigate();
 
