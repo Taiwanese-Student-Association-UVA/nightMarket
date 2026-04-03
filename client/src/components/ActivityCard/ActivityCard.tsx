@@ -8,7 +8,7 @@ import claimButton from "../../assets/activity/claim-button.svg";
 import infoButton from "../../assets/activity/information-button.png";
 import background from "../../assets/BG.png";
 import lantern from "../../assets/activity/lantern.png";
-
+import text from '../../assets/activity/LUCKY PUNCH TEXT.png'
 export default function ActivityCard() {
   const navigate = useNavigate();
 
@@ -152,6 +152,19 @@ export default function ActivityCard() {
         }}
       />
 
+
+        <img
+          src={text}
+          alt="instructions"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            paddingTop: '0%',
+            paddingBottom: '7%'
+          }}
+        />
+
       <div
         style={{
           position: "relative",
@@ -160,6 +173,7 @@ export default function ActivityCard() {
           overflow: "hidden",
         }}
       >
+        
         <img
           src={stampCard}
           alt="Stamp Card"
