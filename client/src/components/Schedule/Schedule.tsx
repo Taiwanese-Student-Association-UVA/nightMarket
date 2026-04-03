@@ -43,7 +43,7 @@ function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
         marginBottom: 10,
         boxShadow: "0 1px 8px rgba(0,0,0,0.07)",
         cursor: row.description ? "pointer" : "default",
-        borderLeft: `4px solid ${index % 3 === 0 ? "#c8a882" : index % 3 === 1 ? "#a8b87a" : "#c9848a"}`,
+        borderLeft: "4px solid #daa024",
         transition: "box-shadow 0.15s",
       }}
     >
@@ -61,7 +61,7 @@ function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
               fontWeight: 600,
-              color: "#63608a",
+              color: "#8a8060",
               margin: "0 0 3px",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
@@ -91,6 +91,7 @@ function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
               transition: "transform 0.2s",
               flexShrink: 0,
               marginTop: 2,
+              whiteSpace: "pre-line",
             }}
           >
             ↓
@@ -103,11 +104,12 @@ function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
           style={{
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
-            color: "#39416e",
+            color: "#0c112b",
             margin: "10px 0 0",
             lineHeight: 1.6,
             borderTop: "1px solid #dce3ed",
             paddingTop: 10,
+            whiteSpace: "pre-line",
           }}
         >
           {row.description}
@@ -126,7 +128,7 @@ function ScheduleList() {
         <p
           style={{
             textAlign: "center",
-            color: "#60668a",
+            color: "#0a0b27",
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14,
           }}
@@ -162,7 +164,7 @@ export default function Schedule() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#e7eaf5",
+          background: "#ece4c4",
           maxWidth: 480,
           margin: "0 auto",
         }}

@@ -272,6 +272,7 @@ function VendorCard({
             fontWeight: 600,
             color: "#18182a",
             lineHeight: 1.3,
+            whiteSpace: "pre-line",
           }}
         >
           {vendor.stall}
@@ -315,7 +316,6 @@ function GenreSection({
       <div
         style={{
           marginBottom: 2,
-          borderBottom: "1px solid #e0a500",
         }}
       >
         {/* accordion header */}
@@ -435,7 +435,7 @@ export default function Menu() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#ffbb0062",
+          background: "#ffe397",
           paddingBottom: 40,
           maxWidth: 480,
           margin: "0 auto",

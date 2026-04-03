@@ -429,7 +429,7 @@ export default function Info() {
           minHeight: "100dvh",
           background: "#f3d75b63",
           maxWidth: 480,
-          margin: "0 auto",
+          margin: "auto auto",
         }}
       >
         <div style={{ padding: "16px 20px 0" }}>
@@ -447,6 +447,17 @@ export default function Info() {
           >
             NightMarket Map
           </h1>
+          <p
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              color: "#61608a",
+              margin: "0 auto",
+              textAlign: "left",
+            }}
+          >
+            Tap a stand number to find out who's there!
+          </p>
         </div>
 
         <div
@@ -454,20 +465,9 @@ export default function Info() {
             padding: "16px 16px 80px",
             display: "flex",
             flexDirection: "column",
+            margin: "0 auto",
           }}
         >
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              color: "#61608a",
-              margin: "8px 0 12px",
-              textAlign: "center",
-            }}
-          >
-            Tap a stand number to find out who's there!
-          </p>
-
           {loading ? (
             <div style={{ textAlign: "center", padding: "40px 20px" }}>
               <p
@@ -536,7 +536,7 @@ export default function Info() {
                             height: 22,
                             borderRadius: 6,
                             background:
-                              tappedStand === n ? "#8289c8" : "#ede5dc",
+                              tappedStand === n ? "#e9d24f" : "#f3ecc4",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",

@@ -13,7 +13,7 @@ export default function BackButton() {
       padding: "10px 16px",
       borderRadius: "10px",
       border: "none",
-      backgroundColor: hover ? "#14062e" : "#e0b75f",
+      backgroundColor: hover ? "#14062e" : "#ffe679",
       color: hover ? "white" : "#14062e",
       fontSize: "14px",
       fontWeight: "500",
