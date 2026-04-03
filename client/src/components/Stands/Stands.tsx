@@ -103,7 +103,7 @@ function VendorModal({
           style={{
             width: "100%",
             maxWidth: 480,
-            background: "#f8f9ff",
+            background: "#fffae5",
             borderRadius: "15px 15px 0 0",
             padding: "0 0 32px",
             animation: "modalIn 0.35s cubic-bezier(.22,.97,.47,1) both",
@@ -134,7 +134,7 @@ function VendorModal({
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontSize: 26,
                 fontWeight: 700,
-                color: "#18182a",
+                color: "#131325",
                 margin: "0 0 10px",
                 lineHeight: 1.2,
               }}
@@ -148,7 +148,7 @@ function VendorModal({
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 15,
                   lineHeight: 1.65,
-                  color: "#30344a",
+                  color: "#353b63",
                   margin: "0 0 14px",
                 }}
               >
@@ -167,7 +167,7 @@ function VendorModal({
               {vendor.sub && (
                 <span
                   style={{
-                    background: "#d4d8e8",
+                    background: "#ffe77d",
                     color: "#3d3a5c",
                     borderRadius: 20,
                     padding: "5px 14px",
@@ -182,8 +182,8 @@ function VendorModal({
               {vendor.sub2 && (
                 <span
                   style={{
-                    background: "#bcbed4",
-                    color: "#2b2a4a",
+                    background: "#ffecb4",
+                    color: "#1d1c3a",
                     borderRadius: 20,
                     padding: "5px 14px",
                     fontFamily: "'DM Sans', sans-serif",
@@ -240,7 +240,7 @@ function VendorCard({
       style={{
         borderRadius: 5,
         overflow: "hidden",
-        background: "#e7e7f5",
+        background: "#fff0c8",
         cursor: "pointer",
         transform: pressed ? "scale(0.97)" : "scale(1)",
         transition: "transform 0.15s ease",
@@ -315,7 +315,7 @@ function GenreSection({
       <div
         style={{
           marginBottom: 2,
-          borderBottom: "1px solid #d4d7e8",
+          borderBottom: "1px solid #e0a500",
         }}
       >
         {/* accordion header */}
@@ -350,8 +350,8 @@ function GenreSection({
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12,
-                color: "#8084a8",
-                background: "#e0e2f0",
+                color: "#222330",
+                background: "#fff7b2",
                 borderRadius: 20,
                 padding: "2px 10px",
                 fontWeight: 500,
@@ -367,7 +367,7 @@ function GenreSection({
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#808ba8"
+            stroke="#303449"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -435,7 +435,7 @@ export default function Menu() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#f8f9ff",
+          background: "#ffbb0062",
           paddingBottom: 40,
           maxWidth: 480,
           margin: "0 auto",
@@ -452,7 +452,7 @@ export default function Menu() {
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: 38,
               fontWeight: 900,
-              color: "#181b2a",
+              color: "#0e1329",
               margin: "0 0 6px",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
@@ -471,7 +471,7 @@ export default function Menu() {
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: "#60648a",
+                color: "#3d405f",
                 margin: 0,
                 lineHeight: 1.5,
               }}
@@ -490,7 +490,7 @@ export default function Menu() {
               justifyContent: "center",
               padding: "60px 0",
               fontFamily: "'DM Sans', sans-serif",
-              color: "#60668a",
+              color: "#27245c",
               fontSize: 14,
             }}
           >
