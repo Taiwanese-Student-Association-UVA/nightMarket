@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import api from "./api/axios";
 
 import LandingPage from "./components/Landing/LandingPage";
 import Home from "./components/Home/Home";
@@ -9,6 +11,33 @@ import Menu from "./components/Stands/Stands";
 import Merch from "./components/Merch/Merch";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScanRedirect from "./components/Scan/ScanRedirect";
+
+// --- Inline TestScanPage (NFC test simulator) ---
+function TestScanPage() {
+    const { stallId } = useParams<{ stallId: string }>();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!stallId) {
+            navigate("/activity");
+            return;
+        }
+
+        const simulateScan = async () => {
+            try {
+                await api.post("/scan", { stallId: Number(stallId) });
+            } catch {
+                // ignore all errors
+            } finally {
+                navigate("/activity");
+            }
+        };
+
+        simulateScan();
+    }, [stallId, navigate]);
+
+    return null; // seamless, no visible page
+}
 
 function App() {
   return (
@@ -80,6 +109,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+          <Route
+              path="/activity/:stallId"
+              element={
+                  <ProtectedRoute>
+                      <TestScanPage />
+                  </ProtectedRoute>
+              }
+          />
 
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />
