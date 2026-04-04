@@ -43,7 +43,7 @@ function ScheduleCard({ row }: { row: ScheduleRow }) {
         marginBottom: 10,
         boxShadow: "0 1px 8px rgba(0,0,0,0.07)",
         cursor: row.description ? "pointer" : "default",
-        borderLeft: "4px solid #daa024",
+        borderLeft: "4px solid #ffd06b",
         transition: "box-shadow 0.15s",
       }}
     >
@@ -164,7 +164,7 @@ export default function Schedule() {
       <div
         style={{
           minHeight: "100dvh",
-          background: "#ece4c4",
+          background: "#fff0b3",
           maxWidth: 480,
           margin: "0 auto",
         }}

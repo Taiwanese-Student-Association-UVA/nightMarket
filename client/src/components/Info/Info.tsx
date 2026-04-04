@@ -109,15 +109,15 @@ const STAND_BOXES: StandBox[] = [
   // Group 25–28: angled ~-25°, inside boxes (26,28) on left, outside (25,27) on right
   // 28 top-left (inside), 26 below it (inside), 27 top-right, 25 bottom-right
   { n: 28, x: 265, y: 235 },
-  { n: 26, x: 285, y: 235 },
-  { n: 27, x: 265, y: 255 },
+  { n: 27, x: 285, y: 235 },
+  { n: 26, x: 265, y: 255 },
   { n: 25, x: 285, y: 255 },
 
   // Group 29–32: right side, upright 2×2
-  { n: 30, x: 280, y: 190 },
-  { n: 32, x: 300, y: 190 },
-  { n: 29, x: 280, y: 210 },
-  { n: 31, x: 300, y: 210 },
+  { n: 32, x: 280, y: 190 },
+  { n: 31, x: 300, y: 190 },
+  { n: 30, x: 280, y: 210 },
+  { n: 29, x: 300, y: 210 },
 
   // Group 33–36: upper-right, upright 2×2
   { n: 36, x: 285, y: 145 },
@@ -410,56 +410,58 @@ export default function Info() {
                     gap: "6px 12px",
                   }}
                 >
-                  {STAND_BOXES.map(({ n }) => {
-                    const stallName = vendorMap.get(n);
-                    if (!stallName) return null;
+                  {[...STAND_BOXES]
+                    .sort((a, b) => a.n - b.n)
+                    .map(({ n }) => {
+                      const stallName = vendorMap.get(n);
+                      if (!stallName) return null;
 
-                    return (
-                      <div
-                        key={n}
-                        onClick={() => setTappedStand(n)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          cursor: "pointer",
-                        }}
-                      >
-                        <span
+                      return (
+                        <div
+                          key={n}
+                          onClick={() => setTappedStand(n)}
                           style={{
-                            width: 22,
-                            height: 22,
-                            borderRadius: 6,
-                            background:
-                              tappedStand === n ? "#e9d24f" : "#f3ecc4",
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center",
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: tappedStand === n ? "#ffffff" : "#3a3d5a",
-                            flexShrink: 0,
-                            transition: "background 0.15s",
+                            gap: 8,
+                            cursor: "pointer",
                           }}
                         >
-                          {n}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 12,
-                            color: "#2a2c4a",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {stallName}
-                        </span>
-                      </div>
-                    );
-                  })}
+                          <span
+                            style={{
+                              width: 22,
+                              height: 22,
+                              borderRadius: 6,
+                              background:
+                                tappedStand === n ? "#e9d24f" : "#f3ecc4",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontFamily: "'DM Sans', sans-serif",
+                              fontSize: 10,
+                              fontWeight: 700,
+                              color: tappedStand === n ? "#ffffff" : "#3a3d5a",
+                              flexShrink: 0,
+                              transition: "background 0.15s",
+                            }}
+                          >
+                            {n}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "'DM Sans', sans-serif",
+                              fontSize: 12,
+                              color: "#2a2c4a",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {stallName}
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 8 }}
