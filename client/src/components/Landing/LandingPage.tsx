@@ -1,11 +1,20 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 
 export default function LandingPage() {
     const navigate = useNavigate();
+    const [activate, setActivate] = useState(false);
 
     const goToHome = () => {
-        navigate("/home");
+        if (activate) return; // prevent multiple clicks
+        setActivate(true);
+
+        // Wait for ripple animation to finish before navigating
+        setTimeout(() => {
+            navigate("/home");
+            setActivate(false);
+        }, 500); // match this to your CSS animation duration
     };
 
     return (
@@ -18,7 +27,7 @@ export default function LandingPage() {
                 />
 
                 <div
-                    className="hand-ripple"
+                    className={`hand-ripple ${activate ? "activate" : ""}`}
                     onClick={goToHome}
                     role="button"
                     tabIndex={0}
