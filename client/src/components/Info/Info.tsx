@@ -590,7 +590,7 @@ export default function Info() {
                         margin: "15px 0",
                       }}
                     >
-                      Wishboard — add your symbol description here
+                      Wishboard - learn more on our stalls page!
                     </span>
                   </div>
                 </div>
