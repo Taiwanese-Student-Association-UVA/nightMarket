@@ -136,12 +136,19 @@ const STAND_BOXES: StandBox[] = [
 function VenueMap({
   vendors,
   onStandTap,
+  activeStandFromLegend,
 }: {
   vendors: StandInfo[];
   onStandTap: (n: number) => void;
+  activeStandFromLegend: number | null;
 }) {
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const BOX = 18;
+
+  // Sync internal active state with legend clicks
+  useEffect(() => {
+    setActiveStand(activeStandFromLegend);
+  }, [activeStandFromLegend]);
 
   const handleTap = (n: number) => {
     setActiveStand(n);
@@ -276,113 +283,6 @@ function VenueMap({
   );
 }
 
-function StandTooltip({
-  standNumber,
-  stallName,
-  onNavigate,
-  onDismiss,
-}: {
-  standNumber: number;
-  stallName: string;
-  onNavigate: () => void;
-  onDismiss: () => void;
-}) {
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 24,
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 200,
-        background: "#181a2a",
-        color: "#f8f9ff",
-        borderRadius: 16,
-        padding: "14px 18px",
-        width: "calc(100% - 40px)",
-        maxWidth: 440,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-      }}
-    >
-      <div
-        style={{
-          width: 36,
-          height: 36,
-          borderRadius: 10,
-          background: "#b3942e",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 700,
-          fontSize: 15,
-          color: "#fff",
-        }}
-      >
-        {standNumber}
-      </div>
-      <div style={{ flex: 1 }}>
-        <p
-          style={{
-            margin: 0,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13,
-            color: "#c8c0a8",
-          }}
-        >
-          Stand {standNumber}
-        </p>
-        <p
-          style={{
-            margin: "2px 0 0",
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 15,
-            fontWeight: 700,
-          }}
-        >
-          {stallName}
-        </p>
-      </div>
-      <button
-        onClick={onNavigate}
-        style={{
-          background: "#f0e1a2",
-          border: "none",
-          borderRadius: 10,
-          color: "#523e1a",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 12,
-          fontWeight: 600,
-          padding: "8px 12px",
-          cursor: "pointer",
-          flexShrink: 0,
-        }}
-      >
-        View →
-      </button>
-      <button
-        onClick={onDismiss}
-        style={{
-          background: "transparent",
-          border: "none",
-          color: "#60648a",
-          fontSize: 18,
-          cursor: "pointer",
-          padding: "4px",
-          flexShrink: 0,
-          lineHeight: 1,
-        }}
-      >
-        ×
-      </button>
-    </div>
-  );
-}
-
 export default function Info() {
   const navigate = useNavigate();
   const [tappedStand, setTappedStand] = useState<number | null>(null);
@@ -490,6 +390,7 @@ export default function Info() {
               <VenueMap
                 vendors={vendors}
                 onStandTap={(n) => setTappedStand(n)}
+                activeStandFromLegend={tappedStand}
               />
 
               <div
@@ -590,21 +491,13 @@ export default function Info() {
                         margin: "15px 0",
                       }}
                     >
-                      Wishboard - learn more on our stalls page!
+                      Wishboard - pick up a plaque from Stand #18 and hang up
+                      your wish!
                     </span>
                   </div>
                 </div>
               </div>
             </>
-          )}
-
-          {tappedStand !== null && vendorMap.has(tappedStand) && (
-            <StandTooltip
-              standNumber={tappedStand}
-              stallName={vendorMap.get(tappedStand)!}
-              onNavigate={handleNavigate}
-              onDismiss={() => setTappedStand(null)}
-            />
           )}
         </div>
       </div>
