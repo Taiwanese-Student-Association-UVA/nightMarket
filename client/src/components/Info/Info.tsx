@@ -136,11 +136,9 @@ const STAND_BOXES: StandBox[] = [
 function VenueMap({
   vendors,
   onStandTap,
-  loading,
 }: {
   vendors: StandInfo[];
   onStandTap: (n: number) => void;
-  loading: boolean;
 }) {
   const [activeStand, setActiveStand] = useState<number | null>(null);
   const BOX = 18;
@@ -485,7 +483,6 @@ export default function Info() {
               <VenueMap
                 vendors={vendors}
                 onStandTap={(n) => setTappedStand(n)}
-                loading={loading}
               />
 
               <div
