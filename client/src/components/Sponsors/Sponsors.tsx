@@ -30,35 +30,35 @@ const sponsors: Sponsor[] = [
         blurb:
             "Bodo's Bagels is a Charlottesville staple, operating since 1988 and serving sandwiches, salads, and freshly baked NY bagels.",
         link: "https://bodosbagels.com",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/bodos.png",
     },
     {
         name: "Ragged Mountain",
         blurb:
             "Ragged Mountain Running Shop is a long-standing, family-owned speciality store in Charlottesville, known for its expert in shoe fitting, gait analysis, and a wide selection of running and walking gear. Since, 1982, it has served the local community with personalized service, focusing on promoting healthy lifestyles for runners of all levels.",
         link: "https://raggedmountainrunning.com",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/raggedmountain.png",
     },
     {
         name: "Shenandoah Joe",
         blurb:
             "Shenandoah Joe Coffee Roasters was established as a small batch coffee roaster in 1993 in Charlottesville, VA. They offer over 25 varieties of coffee using the finest Arabica coffee from all over the world.",
         link: "https://shenandoahjoe.com",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/joe.png",
     },
     {
         name: "Yun Hai",
         blurb:
             "Yun Hai offers a selection of premium ingredients for Taiwanese and Chinese cooking. They source directly from artisans, farms, and soy sauce breweries in Taiwan. Yun Haiâ€™s team helps small food businesses based in Taiwan prepare their product for commercial import to an eager audience in the United States. They intend to bring visibility to the culture, cuisine, and independence of Taiwan while offering a selection of fine and fancy ingredients for Taiwanese and Chinese cooking.",
         link: "https://yunhai.shop/",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/yunhai.png",
     },
     {
         name: "Pineapples Thai",
         blurb:
             "Pineapples Thai Kitchen is a family-owned Thai restaurant in Charlottesville, VA. The restaurant is owned by Kitty Ashi who refers to her staff as a family and focuses on creating a family atmosphere. Pineapples Thai is known for having a welcoming, family run atmosphere with yummy authentic food.",
         link: "https://pineapplescville.com",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/pthai.png",
     },
     {
         name: "FAPA",
@@ -100,21 +100,14 @@ const sponsors: Sponsor[] = [
         blurb:
             "UVA Third Year Council is comprised of representatives from each of the University's 8 undergraduate schools and the incoming class of transfer students. The Council is responsible for overseeing the third-year experience at UVA including planning all third-year programming, coordinating class-wide initiatives, and represents the interests of the third-year class to the University administration.",
         link: "https://uvaclasscouncils.org",
-        img: "/sponsors/2027.png",
-    },
-    {
-        name: "UVA Honor",
-        blurb:
-            "UVA’s Honor Committee upholds the Community of Trust, where honesty and mutual respect form the foundation of academic and personal interactions.",
-        link: "https://honor.virginia.edu",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/thirdyearcouncil.png",
     },
     {
         name: "UVA Parents Program",
         blurb:
             "The UVA Parents Program enhances the student experience through annual gifts from parents of current and former students. The Parents Program supports student clubs and cultural events, academic enhancement programs and career services, health and wellness initiatives, and class dinners and traditions that enrich student life across Ground.",
         link: "https://giving.virginia.edu/where-to-give/parents-fund/",
-        img: "/sponsors/honor.png",
+        img: "/sponsors/parents.png",
     },
 ];
 
