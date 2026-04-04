@@ -30,7 +30,7 @@ function useSchedule(csvUrl: string) {
   return { rows, loading };
 }
 
-function ScheduleCard({ row, index }: { row: ScheduleRow; index: number }) {
+function ScheduleCard({ row }: { row: ScheduleRow }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -147,7 +147,7 @@ function ScheduleList() {
           Schedule coming soon!
         </p>
       ) : (
-        rows.map((row, i) => <ScheduleCard key={i} row={row} index={i} />)
+        rows.map((row, i) => <ScheduleCard key={i} row={row} />)
       )}
     </div>
   );
