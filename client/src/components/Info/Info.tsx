@@ -71,66 +71,66 @@ interface StandBox {
 // BOX size is 18x18; rotate is applied around the box center
 const STAND_BOXES: StandBox[] = [
   // Group 1–4: top-left, upright 2×2
-  { n: 1, x: 58, y: 112 },
-  { n: 2, x: 78, y: 112 },
-  { n: 3, x: 58, y: 132 },
-  { n: 4, x: 78, y: 132 },
+  { n: 1, x: 70, y: 100 },
+  { n: 2, x: 90, y: 100 },
+  { n: 3, x: 70, y: 120 },
+  { n: 4, x: 90, y: 120 },
 
   // Group 5–8: mid-left, upright 2×2
-  { n: 5, x: 52, y: 162 },
-  { n: 6, x: 72, y: 162 },
-  { n: 7, x: 52, y: 182 },
-  { n: 8, x: 72, y: 182 },
+  { n: 5, x: 75, y: 145 },
+  { n: 6, x: 95, y: 145 },
+  { n: 7, x: 75, y: 165 },
+  { n: 8, x: 95, y: 165 },
 
   // Group 9–12: lower-left, upright 2×2
-  { n: 9, x: 72, y: 210 },
-  { n: 10, x: 92, y: 210 },
-  { n: 11, x: 72, y: 230 },
-  { n: 12, x: 92, y: 230 },
+  { n: 9, x: 80, y: 190 },
+  { n: 10, x: 100, y: 190 },
+  { n: 11, x: 80, y: 210 },
+  { n: 12, x: 100, y: 210 },
 
   // Group 13–16: angled ~25°, outside boxes (13,15) on left, inside (14,16) on right
   // 13 top-left, 14 top-right (inside), 15 bottom-left, 16 bottom-right (inside)
-  { n: 13, x: 100, y: 256, rotate: 25 },
-  { n: 14, x: 118, y: 248, rotate: 25 },
-  { n: 15, x: 106, y: 274, rotate: 25 },
-  { n: 16, x: 124, y: 266, rotate: 25 },
+  { n: 13, x: 95, y: 235 },
+  { n: 14, x: 115, y: 235 },
+  { n: 15, x: 95, y: 255 },
+  { n: 16, x: 115, y: 255 },
 
   // Group 17–20: center-bottom, upright 2×2
-  { n: 18, x: 152, y: 262 },
-  { n: 20, x: 172, y: 262 },
-  { n: 17, x: 152, y: 282 },
-  { n: 19, x: 172, y: 282 },
+  { n: 18, x: 140, y: 262 },
+  { n: 20, x: 160, y: 262 },
+  { n: 17, x: 140, y: 282 },
+  { n: 19, x: 160, y: 282 },
 
   // Group 21–24: center-right-bottom, upright 2×2
-  { n: 22, x: 208, y: 262 },
-  { n: 24, x: 228, y: 262 },
-  { n: 21, x: 208, y: 282 },
-  { n: 23, x: 228, y: 282 },
+  { n: 22, x: 220, y: 262 },
+  { n: 24, x: 240, y: 262 },
+  { n: 21, x: 220, y: 282 },
+  { n: 23, x: 240, y: 282 },
 
   // Group 25–28: angled ~-25°, inside boxes (26,28) on left, outside (25,27) on right
   // 28 top-left (inside), 26 below it (inside), 27 top-right, 25 bottom-right
-  { n: 28, x: 252, y: 248, rotate: -25 },
-  { n: 26, x: 258, y: 266, rotate: -25 },
-  { n: 27, x: 270, y: 256, rotate: -25 },
-  { n: 25, x: 276, y: 274, rotate: -25 },
+  { n: 28, x: 265, y: 235 },
+  { n: 26, x: 285, y: 235 },
+  { n: 27, x: 265, y: 255 },
+  { n: 25, x: 285, y: 255 },
 
   // Group 29–32: right side, upright 2×2
-  { n: 30, x: 282, y: 220 },
-  { n: 32, x: 302, y: 220 },
-  { n: 29, x: 282, y: 240 },
-  { n: 31, x: 302, y: 240 },
+  { n: 30, x: 280, y: 190 },
+  { n: 32, x: 300, y: 190 },
+  { n: 29, x: 280, y: 210 },
+  { n: 31, x: 300, y: 210 },
 
   // Group 33–36: upper-right, upright 2×2
-  { n: 36, x: 290, y: 158 },
-  { n: 35, x: 310, y: 158 },
-  { n: 34, x: 290, y: 178 },
-  { n: 33, x: 310, y: 178 },
+  { n: 36, x: 285, y: 145 },
+  { n: 35, x: 305, y: 145 },
+  { n: 34, x: 285, y: 165 },
+  { n: 33, x: 305, y: 165 },
 
   // Group 37–40: top-right, upright 2×2
-  { n: 40, x: 294, y: 100 },
-  { n: 39, x: 314, y: 100 },
-  { n: 38, x: 294, y: 120 },
-  { n: 37, x: 314, y: 120 },
+  { n: 40, x: 290, y: 100 },
+  { n: 39, x: 310, y: 100 },
+  { n: 38, x: 290, y: 120 },
+  { n: 37, x: 310, y: 120 },
 ];
 
 function VenueMap({
@@ -454,7 +454,14 @@ export default function Info() {
               textAlign: "left",
             }}
           >
-            Tap a stand number to find out who's there!
+            Tap{" "}
+            <a
+              href="/stands"
+              style={{ color: "#583e0d", textDecoration: "underline" }}
+            >
+              here
+            </a>{" "}
+            to find out more about our stands!
           </p>
         </div>
 
@@ -562,6 +569,30 @@ export default function Info() {
                       </div>
                     );
                   })}
+                </div>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                  >
+                    <svg width="20" height="30" viewBox="0 0 20 30">
+                      <polygon
+                        points="10,0 13,12 20,15 13,18 10,30 7,18 0,15 7,12"
+                        fill="#2a2018"
+                      />
+                    </svg>
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: "#2a2c4a",
+                        margin: "15px 0",
+                      }}
+                    >
+                      Wishboard — add your symbol description here
+                    </span>
+                  </div>
                 </div>
               </div>
             </>
