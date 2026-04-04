@@ -1,30 +1,16 @@
-import { useState } from "react";
-import LoginModal from "../Modal/LoginModal";
+import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 
 export default function LandingPage() {
+    const navigate = useNavigate();
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [activate, setActivate] = useState(false);
-
-    const openModal = () => {
-        if (activate) return;
-
-        setActivate(true);
-
-        setTimeout(() => {
-            setIsOpen(true);
-            setActivate(false);
-        }, 400);
+    const goToHome = () => {
+        navigate("/home");
     };
-
-    const closeModal = () => setIsOpen(false);
 
     return (
         <div className="landing-page">
-
             <div className="comic-container">
-
                 <img
                     src="/landing-comic.png"
                     className="comic-image"
@@ -32,27 +18,23 @@ export default function LandingPage() {
                 />
 
                 <div
-                    className={`hand-ripple ${activate ? "activate" : ""}`}
-                    onClick={openModal}
+                    className="hand-ripple"
+                    onClick={goToHome}
                     role="button"
                     tabIndex={0}
                     aria-label="Enter Nightmarket!"
                     onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
-                            openModal();
+                            goToHome();
                         }
                     }}
                 >
-
                     <div className="ripple-core"></div>
-
                     <div className="ripple"></div>
                     <div className="ripple delay1"></div>
                     <div className="ripple delay2"></div>
 
-                    <div className="login-text">
-                        Take my hand!
-                    </div>
+                    <div className="login-text">Take my hand!</div>
 
                     <span className="spark spark1"></span>
                     <span className="spark spark2"></span>
@@ -62,15 +44,8 @@ export default function LandingPage() {
                     <span className="spark spark6"></span>
                     <span className="spark spark7"></span>
                     <span className="spark spark8"></span>
-
                 </div>
-
             </div>
-
-            <LoginModal
-                isOpen={isOpen}
-                onClose={closeModal}
-            />
         </div>
     );
 }

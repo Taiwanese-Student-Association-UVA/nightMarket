@@ -58,7 +58,7 @@ export default function LoginModal({ isOpen, onClose }: Props) {
       localStorage.setItem("token", res.data.token);
 
       onClose();
-      navigate("/home");
+      navigate("/activity");
     } catch (err) {
       const axiosError = err as AxiosError<{ message: string }>;
       const msg = axiosError.response?.data?.message || "";
