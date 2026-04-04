@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 import BackButton from "../BackButton";
 
@@ -284,7 +283,6 @@ function VenueMap({
 }
 
 export default function Info() {
-  const navigate = useNavigate();
   const [tappedStand, setTappedStand] = useState<number | null>(null);
   const [csvUrl, setCsvUrl] = useState(getCurrentVendorsCsvUrl());
   const { vendors, loading } = useVendors(csvUrl);
@@ -306,14 +304,6 @@ export default function Info() {
 
   // Create a map for quick lookup
   const vendorMap = new Map(vendors.map((v) => [v.number, v.name]));
-
-  const handleNavigate = () => {
-    if (tappedStand === null) return;
-    const stallName = vendorMap.get(tappedStand);
-    if (stallName) {
-      navigate(`/vendors?stall=${encodeURIComponent(stallName)}`);
-    }
-  };
 
   return (
     <>
