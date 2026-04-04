@@ -9,9 +9,15 @@ type Props = {
   onClose: () => void;
 };
 
+type View = "login" | "register";
+
 export default function LoginModal({ isOpen, onClose }: Props) {
+  const [view, setView] = useState<View>("login");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,13 +25,35 @@ export default function LoginModal({ isOpen, onClose }: Props) {
 
   if (!isOpen) return null;
 
-  const submit = async (register: boolean) => {
+  const resetForm = () => {
+    setUsername("");
+    setPassword("");
+    setConfirm("");
+    setError("");
+    setLoading(false);
+  };
+
+  const switchView = (newView: View) => {
+    resetForm();
+    setView(newView);
+  };
+
+  const submit = async () => {
+    if (view === "register" && password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
 
-      const url = register ? "/register" : "/login";
-      const res = await api.post(url, { username, password });
+      const url = view === "register" ? "/register" : "/login";
+
+      const res = await api.post(url, {
+        username,
+        password,
+      });
 
       localStorage.setItem("token", res.data.token);
 
@@ -40,6 +68,8 @@ export default function LoginModal({ isOpen, onClose }: Props) {
           msg.includes("users_username_key")
       ) {
         setError("That username is already taken.");
+      } else if (msg.includes("invalid credentials")) {
+        setError("Invalid username or password.");
       } else {
         setError(msg || "Something went wrong.");
       }
@@ -64,9 +94,14 @@ export default function LoginModal({ isOpen, onClose }: Props) {
             ×
           </button>
 
-          <h2 className="modal-title">Welcome</h2>
+          <h2 className="modal-title">
+            {view === "login" ? "Welcome" : "Create Account"}
+          </h2>
+
           <p className="modal-subtitle">
-            Log in or create an account to collect stamps and rewards.
+            {view === "login"
+                ? "Log in to collect stamps and rewards."
+                : "Register to start collecting stamps and rewards."}
           </p>
 
           <div className="login-form">
@@ -89,23 +124,47 @@ export default function LoginModal({ isOpen, onClose }: Props) {
                 }}
             />
 
+            {view === "register" && (
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirm}
+                    onChange={(e) => {
+                      setConfirm(e.target.value);
+                      setError("");
+                    }}
+                />
+            )}
+
             {error && <p className="form-error">{error}</p>}
 
             <button
                 className="primary-btn"
-                onClick={() => submit(false)}
+                onClick={submit}
                 disabled={loading}
             >
-              {loading ? "Please wait..." : "Login"}
+              {loading
+                  ? "Please wait..."
+                  : view === "login"
+                      ? "Login"
+                      : "Register"}
             </button>
 
-            <button
-                className="secondary-btn"
-                onClick={() => submit(true)}
-                disabled={loading}
-            >
-              Register
-            </button>
+            {view === "login" ? (
+                <button
+                    className="secondary-btn"
+                    onClick={() => switchView("register")}
+                >
+                  Create Account
+                </button>
+            ) : (
+                <button
+                    className="secondary-btn"
+                    onClick={() => switchView("login")}
+                >
+                  Back to Login
+                </button>
+            )}
           </div>
         </div>
       </div>
