@@ -129,7 +129,7 @@ function SponsorCard({
             style={{
                 borderRadius: 5,
                 overflow: "hidden",
-                background: "#e7e7f5",
+                background: "#fff0c8",
                 cursor: "pointer",
                 transform: pressed ? "scale(0.97)" : "scale(1)",
                 transition: "transform 0.15s ease",
@@ -248,7 +248,7 @@ function SponsorModal({
                     style={{
                         width: "100%",
                         maxWidth: 480,
-                        background: "#f8f9ff",
+                        background: "#fffae5",
                         borderRadius: "15px 15px 0 0",
                         padding: "0 0 32px",
                         maxHeight: "85vh",
@@ -311,7 +311,7 @@ function SponsorModal({
                                 fontWeight: 600,
                                 color: "#3d3a5c",
                                 textDecoration: "none",
-                                background: "#d4d8e8",
+                                background: "#ffe77d",
                                 padding: "6px 14px",
                                 borderRadius: 20,
                             }}
@@ -357,7 +357,7 @@ export default function Sponsors() {
             <div
                 style={{
                     minHeight: "100dvh",
-                    background: "#f8f9ff",
+                    background: "#ffe397",
                     maxWidth: 480,
                     margin: "0 auto",
                 }}
